@@ -1,0 +1,21 @@
+model TutorDocuments {
+  id             String        @id @unique @default(uuid())
+  filename       String
+  size           Int
+  mimeType       String
+  uploadedAt     DateTime      @default(now())
+  tutorProfileId String
+  tutor          TutorProfiles @relation(fields: [tutorProfileId], references: [id])
+}
+
+model TutorProfiles {
+  id             String           @id @unique @default(uuid())
+  userId         String           @unique
+  displayName    String
+  experiences    String[]
+  qualifications String[]
+  documents      TutorDocuments[] // One-to-many relation array
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  user           Users            @relation(fields: [userId], references: [id]) // One-to-one relation
+}

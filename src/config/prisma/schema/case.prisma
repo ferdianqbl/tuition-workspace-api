@@ -1,0 +1,43 @@
+enum CaseStatus {
+  OPEN
+  MATCHED
+  CLOSED
+}
+
+model CaseDocuments {
+  id         String   @id @unique @default(uuid())
+  filename   String
+  size       Int
+  mimeType   String
+  uploadedAt DateTime @default(now())
+  caseId     String
+  case       Cases    @relation(fields: [caseId], references: [id])
+}
+
+model Cases {
+  id            String          @id @unique @default(uuid())
+  userId        String
+  title         String
+  subject       String
+  level         String
+  location      String
+  budgetPerHour Float
+  status        CaseStatus
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  caseDocuments CaseDocuments[]
+  user          Users           @relation(fields: [userId], references: [id])
+  caseAccesses  CaseAccesses[]
+}
+
+model CaseAccesses {
+  id        String    @id @unique @default(uuid())
+  caseId    String
+  parentId  String
+  tutorId   String
+  invitedAt DateTime  @default(now())
+  revokedAt DateTime?
+  case      Cases     @relation(fields: [caseId], references: [id])
+  parent    Users     @relation("ParentAccesses", fields: [parentId], references: [id])
+  tutor     Users     @relation("TutorAccesses", fields: [tutorId], references: [id])
+}
