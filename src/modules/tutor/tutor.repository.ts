@@ -1,4 +1,5 @@
 import { prisma } from "../../lib/prisma";
+import type { ITutorFilters, ITutorQueryRequest, IUpsertTutorProfile } from "./tutor.types";
 
 export class TutorRepository {
   async findProfileByUserId(userId: string) {
@@ -35,7 +36,7 @@ export class TutorRepository {
     });
   }
 
-  async findAll(params: { search?: string; skip: number; take: number }) {
+  async findAll(params: ITutorQueryRequest) {
     const { search, skip, take } = params;
     const where: any = {};
 
@@ -66,7 +67,7 @@ export class TutorRepository {
     });
   }
 
-  async count(params: { search?: string }) {
+  async count(params: ITutorFilters) {
     const { search } = params;
     const where: any = {};
 
@@ -83,7 +84,7 @@ export class TutorRepository {
 
   async upsertProfile(
     userId: string,
-    data: { displayName: string; qualifications: string[]; experiences: string[] }
+    data: IUpsertTutorProfile
   ) {
     return prisma.tutorProfiles.upsert({
       where: { userId },

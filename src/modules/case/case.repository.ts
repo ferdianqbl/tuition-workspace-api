@@ -1,23 +1,11 @@
 import { prisma } from "../../lib/prisma";
 import { CaseStatus } from "@/generated/prisma/client";
-
-export interface ICaseFilters {
-  search?: string;
-  subject?: string;
-  level?: string;
-  status?: CaseStatus;
-}
+import type { ICaseFilters, ICreateCaseRequest, IUpdateCaseRequest, ICaseQueryRequest } from "./case.types";
 
 export class CaseRepository {
   async createCase(
     userId: string,
-    data: {
-      title: string;
-      subject: string;
-      level: string;
-      location: string;
-      budgetPerHour: number;
-    }
+    data: ICreateCaseRequest
   ) {
     return prisma.cases.create({
       data: {
@@ -34,14 +22,7 @@ export class CaseRepository {
 
   async updateCase(
     id: string,
-    data: Partial<{
-      title: string;
-      subject: string;
-      level: string;
-      location: string;
-      budgetPerHour: number;
-      status: CaseStatus;
-    }>
+    data: IUpdateCaseRequest
   ) {
     return prisma.cases.update({
       where: { id },
@@ -119,7 +100,7 @@ export class CaseRepository {
 
   async findCasesForParent(
     parentId: string,
-    params: { skip: number; take: number; filters?: ICaseFilters }
+    params: ICaseQueryRequest
   ) {
     const { skip, take, filters } = params;
     const baseWhere = this.buildFilters(filters);
@@ -156,7 +137,7 @@ export class CaseRepository {
 
   async findCasesForTutor(
     tutorId: string,
-    params: { skip: number; take: number; filters?: ICaseFilters }
+    params: ICaseQueryRequest
   ) {
     const { skip, take, filters } = params;
     const baseWhere = this.buildFilters(filters);
