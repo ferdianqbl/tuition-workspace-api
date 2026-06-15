@@ -1,5 +1,4 @@
-import { prisma } from "../../lib/prisma";
-import { handleRepositoryError } from "@/utils/error";
+import { prisma } from "@/lib/prisma";
 
 export class AuthRepository {
   async createSession(userId: string, token: string, expiresAt: Date) {
@@ -16,8 +15,8 @@ export class AuthRepository {
           expiresAt,
         },
       });
-    } catch (error) {
-      handleRepositoryError(error, "Failed to create or update auth session");
+    } catch {
+      throw new Error("Failed to create or update auth session");
     }
   }
 
@@ -36,8 +35,8 @@ export class AuthRepository {
           },
         },
       });
-    } catch (error) {
-      handleRepositoryError(error, "Failed to retrieve auth session by token");
+    } catch {
+      throw new Error("Failed to retrieve auth session by token");
     }
   }
 
@@ -46,11 +45,8 @@ export class AuthRepository {
       return await prisma.authSessions.delete({
         where: { token },
       });
-    } catch (error) {
-      // Return null if session wasn't found anyway, else handle other DB errors
-      const isRecordNotFound = (error as any)?.code === "P2025";
-      if (isRecordNotFound) return null;
-      handleRepositoryError(error, "Failed to delete auth session by token");
+    } catch {
+      throw new Error("Failed to delete auth session by token");
     }
   }
 
@@ -59,10 +55,8 @@ export class AuthRepository {
       return await prisma.authSessions.delete({
         where: { userId },
       });
-    } catch (error) {
-      const isRecordNotFound = (error as any)?.code === "P2025";
-      if (isRecordNotFound) return null;
-      handleRepositoryError(error, "Failed to delete auth session by user ID");
+    } catch {
+      throw new Error("Failed to delete auth session by user ID");
     }
   }
 }

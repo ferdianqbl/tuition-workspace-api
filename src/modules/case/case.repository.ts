@@ -1,13 +1,15 @@
-import { prisma } from "../../lib/prisma";
 import { CaseStatus } from "@/generated/prisma/client";
-import type { ICaseFilters, ICreateCaseRequest, IUpdateCaseRequest, ICaseQueryRequest } from "./case.types";
-import { handleRepositoryError } from "@/utils/error";
+import type { CasesWhereInput } from "@/generated/prisma/models";
+import { prisma } from "@/lib/prisma";
+import type {
+  ICaseFilters,
+  ICaseQueryRequest,
+  ICreateCaseRequest,
+  IUpdateCaseRequest,
+} from "./case.types";
 
 export class CaseRepository {
-  async createCase(
-    userId: string,
-    data: ICreateCaseRequest
-  ) {
+  async createCase(userId: string, data: ICreateCaseRequest) {
     try {
       return await prisma.cases.create({
         data: {
@@ -20,22 +22,19 @@ export class CaseRepository {
           status: CaseStatus.OPEN,
         },
       });
-    } catch (error) {
-      handleRepositoryError(error, "Failed to create tuition case");
+    } catch {
+      throw new Error("Failed to create tuition case");
     }
   }
 
-  async updateCase(
-    id: string,
-    data: IUpdateCaseRequest
-  ) {
+  async updateCase(id: string, data: IUpdateCaseRequest) {
     try {
       return await prisma.cases.update({
         where: { id },
         data,
       });
-    } catch (error) {
-      handleRepositoryError(error, `Failed to update case ${id}`);
+    } catch {
+      throw new Error(`Failed to update case ${id}`);
     }
   }
 
@@ -78,13 +77,13 @@ export class CaseRepository {
           },
         },
       });
-    } catch (error) {
-      handleRepositoryError(error, `Failed to retrieve case ${id}`);
+    } catch {
+      throw new Error(`Failed to retrieve case ${id}`);
     }
   }
 
   private buildFilters(filters?: ICaseFilters) {
-    const where: any = {};
+    const where: CasesWhereInput = {};
 
     if (!filters) return where;
 
@@ -111,10 +110,7 @@ export class CaseRepository {
     return where;
   }
 
-  async findCasesForParent(
-    parentId: string,
-    params: ICaseQueryRequest
-  ) {
+  async findCasesForParent(parentId: string, params: ICaseQueryRequest) {
     try {
       const { skip, take, filters } = params;
       const baseWhere = this.buildFilters(filters);
@@ -137,8 +133,8 @@ export class CaseRepository {
           },
         },
       });
-    } catch (error) {
-      handleRepositoryError(error, "Failed to retrieve parent cases list");
+    } catch {
+      throw new Error("Failed to retrieve parent cases list");
     }
   }
 
@@ -151,15 +147,12 @@ export class CaseRepository {
       };
 
       return await prisma.cases.count({ where });
-    } catch (error) {
-      handleRepositoryError(error, "Failed to count parent cases");
+    } catch {
+      throw new Error("Failed to count parent cases");
     }
   }
 
-  async findCasesForTutor(
-    tutorId: string,
-    params: ICaseQueryRequest
-  ) {
+  async findCasesForTutor(tutorId: string, params: ICaseQueryRequest) {
     try {
       const { skip, take, filters } = params;
       const baseWhere = this.buildFilters(filters);
@@ -187,8 +180,8 @@ export class CaseRepository {
           },
         },
       });
-    } catch (error) {
-      handleRepositoryError(error, "Failed to retrieve tutor cases list");
+    } catch {
+      throw new Error("Failed to retrieve tutor cases list");
     }
   }
 
@@ -206,8 +199,8 @@ export class CaseRepository {
       };
 
       return await prisma.cases.count({ where });
-    } catch (error) {
-      handleRepositoryError(error, "Failed to count tutor cases");
+    } catch {
+      throw new Error("Failed to count tutor cases");
     }
   }
 
@@ -231,8 +224,8 @@ export class CaseRepository {
           tutorId,
         },
       });
-    } catch (error) {
-      handleRepositoryError(error, "Failed to grant tutor access to case");
+    } catch {
+      throw new Error("Failed to grant tutor access to case");
     }
   }
 
@@ -248,8 +241,8 @@ export class CaseRepository {
           revokedAt: new Date(),
         },
       });
-    } catch (error) {
-      handleRepositoryError(error, "Failed to revoke tutor access to case");
+    } catch {
+      throw new Error("Failed to revoke tutor access to case");
     }
   }
 
@@ -262,14 +255,14 @@ export class CaseRepository {
           revokedAt: null,
         },
       });
-    } catch (error) {
-      handleRepositoryError(error, "Failed to retrieve case access details");
+    } catch {
+      throw new Error("Failed to retrieve case access details");
     }
   }
 
   async createDocument(
     caseId: string,
-    data: { filename: string; size: number; mimeType: string }
+    data: { filename: string; size: number; mimeType: string },
   ) {
     try {
       return await prisma.caseDocuments.create({
@@ -280,8 +273,8 @@ export class CaseRepository {
           mimeType: data.mimeType,
         },
       });
-    } catch (error) {
-      handleRepositoryError(error, "Failed to create case document");
+    } catch {
+      throw new Error("Failed to create case document");
     }
   }
 
@@ -293,8 +286,8 @@ export class CaseRepository {
           case: true,
         },
       });
-    } catch (error) {
-      handleRepositoryError(error, `Failed to retrieve case document ${id}`);
+    } catch {
+      throw new Error(`Failed to retrieve case document ${id}`);
     }
   }
 }

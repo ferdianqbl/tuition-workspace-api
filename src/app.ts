@@ -1,6 +1,6 @@
-import "dotenv/config";
 import compression from "compression";
 import cors from "cors";
+import "dotenv/config";
 import express from "express";
 import helmet from "helmet";
 import routes from "./routes";
