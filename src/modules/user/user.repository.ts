@@ -37,6 +37,17 @@ export class UserRepository {
   async findByUsername(username: string) {
     return prisma.users.findUnique({
       where: { username },
+    });
+  }
+
+  async create(data: {
+    username: string;
+    password: string; // Already hashed
+    name: string;
+    role: "PARENT" | "TUTOR" | "ADMIN";
+  }) {
+    return prisma.users.create({
+      data,
       select: {
         id: true,
         username: true,
