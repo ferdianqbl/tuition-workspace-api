@@ -9,7 +9,13 @@ import type {
 } from "./case.types";
 
 export class CaseRepository {
-  async createCase(userId: string, data: ICreateCaseRequest) {
+  async createCase({
+    userId,
+    data,
+  }: {
+    userId: string;
+    data: ICreateCaseRequest;
+  }) {
     try {
       return await prisma.cases.create({
         data: {
@@ -27,7 +33,7 @@ export class CaseRepository {
     }
   }
 
-  async updateCase(id: string, data: IUpdateCaseRequest) {
+  async updateCase({ id, data }: { id: string; data: IUpdateCaseRequest }) {
     try {
       return await prisma.cases.update({
         where: { id },
@@ -110,7 +116,13 @@ export class CaseRepository {
     return where;
   }
 
-  async findCasesForParent(parentId: string, params: ICaseQueryRequest) {
+  async findCasesForParent({
+    parentId,
+    params,
+  }: {
+    parentId: string;
+    params: ICaseQueryRequest;
+  }) {
     try {
       const { skip, take, filters } = params;
       const baseWhere = this.buildFilters(filters);
@@ -138,8 +150,12 @@ export class CaseRepository {
     }
   }
 
-  async countCasesForParent(parentId: string, filters?: ICaseFilters) {
+  async countCasesForParent(params: {
+    parentId: string;
+    filters?: ICaseFilters;
+  }) {
     try {
+      const { parentId, filters } = params;
       const baseWhere = this.buildFilters(filters);
       const where = {
         ...baseWhere,
@@ -152,7 +168,13 @@ export class CaseRepository {
     }
   }
 
-  async findCasesForTutor(tutorId: string, params: ICaseQueryRequest) {
+  async findCasesForTutor({
+    tutorId,
+    params,
+  }: {
+    tutorId: string;
+    params: ICaseQueryRequest;
+  }) {
     try {
       const { skip, take, filters } = params;
       const baseWhere = this.buildFilters(filters);
@@ -185,8 +207,12 @@ export class CaseRepository {
     }
   }
 
-  async countCasesForTutor(tutorId: string, filters?: ICaseFilters) {
+  async countCasesForTutor(params: {
+    tutorId: string;
+    filters?: ICaseFilters;
+  }) {
     try {
+      const { tutorId, filters } = params;
       const baseWhere = this.buildFilters(filters);
       const where = {
         ...baseWhere,
@@ -204,8 +230,13 @@ export class CaseRepository {
     }
   }
 
-  async createAccess(caseId: string, parentId: string, tutorId: string) {
+  async createAccess(params: {
+    caseId: string;
+    parentId: string;
+    tutorId: string;
+  }) {
     try {
+      const { caseId, parentId, tutorId } = params;
       const existing = await prisma.caseAccesses.findFirst({
         where: { caseId, tutorId },
       });
@@ -229,7 +260,7 @@ export class CaseRepository {
     }
   }
 
-  async revokeAccess(caseId: string, tutorId: string) {
+  async revokeAccess({ caseId, tutorId }: { caseId: string; tutorId: string }) {
     try {
       return await prisma.caseAccesses.updateMany({
         where: {
@@ -260,10 +291,13 @@ export class CaseRepository {
     }
   }
 
-  async createDocument(
-    caseId: string,
-    data: { filename: string; size: number; mimeType: string },
-  ) {
+  async createDocument({
+    caseId,
+    data,
+  }: {
+    caseId: string;
+    data: { filename: string; size: number; mimeType: string };
+  }) {
     try {
       return await prisma.caseDocuments.create({
         data: {

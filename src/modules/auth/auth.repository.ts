@@ -1,7 +1,8 @@
 import { prisma } from "@/lib/prisma";
+import type { IAuthCreateSessionRequest } from "./auth.types";
 
 export class AuthRepository {
-  async createSession(userId: string, token: string, expiresAt: Date) {
+  async createSession({ userId, token, expiresAt }: IAuthCreateSessionRequest) {
     try {
       return await prisma.authSessions.upsert({
         where: { userId },
