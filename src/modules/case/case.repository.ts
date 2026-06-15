@@ -7,6 +7,7 @@ import type {
   ICreateCaseRequest,
   IUpdateCaseRequest,
 } from "./case.types";
+import { handleRepositoryError } from "@/utils/error";
 
 export class CaseRepository {
   async createCase({
@@ -28,8 +29,8 @@ export class CaseRepository {
           status: CaseStatus.OPEN,
         },
       });
-    } catch {
-      throw new Error("Failed to create tuition case");
+    } catch (error) {
+      handleRepositoryError(error, "Failed to create tuition case");
     }
   }
 
@@ -39,8 +40,8 @@ export class CaseRepository {
         where: { id },
         data,
       });
-    } catch {
-      throw new Error(`Failed to update case ${id}`);
+    } catch (error) {
+      handleRepositoryError(error, `Failed to update case ${id}`);
     }
   }
 
@@ -83,8 +84,8 @@ export class CaseRepository {
           },
         },
       });
-    } catch {
-      throw new Error(`Failed to retrieve case ${id}`);
+    } catch (error) {
+      handleRepositoryError(error, `Failed to retrieve case ${id}`);
     }
   }
 
@@ -145,8 +146,8 @@ export class CaseRepository {
           },
         },
       });
-    } catch {
-      throw new Error("Failed to retrieve parent cases list");
+    } catch (error) {
+      handleRepositoryError(error, "Failed to retrieve parent cases list");
     }
   }
 
@@ -163,8 +164,8 @@ export class CaseRepository {
       };
 
       return await prisma.cases.count({ where });
-    } catch {
-      throw new Error("Failed to count parent cases");
+    } catch (error) {
+      handleRepositoryError(error, "Failed to count parent cases");
     }
   }
 
@@ -202,8 +203,8 @@ export class CaseRepository {
           },
         },
       });
-    } catch {
-      throw new Error("Failed to retrieve tutor cases list");
+    } catch (error) {
+      handleRepositoryError(error, "Failed to retrieve tutor cases list");
     }
   }
 
@@ -225,8 +226,8 @@ export class CaseRepository {
       };
 
       return await prisma.cases.count({ where });
-    } catch {
-      throw new Error("Failed to count tutor cases");
+    } catch (error) {
+      handleRepositoryError(error, "Failed to count tutor cases");
     }
   }
 
@@ -255,8 +256,8 @@ export class CaseRepository {
           tutorId,
         },
       });
-    } catch {
-      throw new Error("Failed to grant tutor access to case");
+    } catch (error) {
+      handleRepositoryError(error, "Failed to grant tutor access to case");
     }
   }
 
@@ -272,8 +273,8 @@ export class CaseRepository {
           revokedAt: new Date(),
         },
       });
-    } catch {
-      throw new Error("Failed to revoke tutor access to case");
+    } catch (error) {
+      handleRepositoryError(error, "Failed to revoke tutor access to case");
     }
   }
 
@@ -286,8 +287,8 @@ export class CaseRepository {
           revokedAt: null,
         },
       });
-    } catch {
-      throw new Error("Failed to retrieve case access details");
+    } catch (error) {
+      handleRepositoryError(error, "Failed to retrieve case access details");
     }
   }
 
@@ -307,8 +308,8 @@ export class CaseRepository {
           mimeType: data.mimeType,
         },
       });
-    } catch {
-      throw new Error("Failed to create case document");
+    } catch (error) {
+      handleRepositoryError(error, "Failed to create case document");
     }
   }
 
@@ -320,8 +321,8 @@ export class CaseRepository {
           case: true,
         },
       });
-    } catch {
-      throw new Error(`Failed to retrieve case document ${id}`);
+    } catch (error) {
+      handleRepositoryError(error, `Failed to retrieve case document ${id}`);
     }
   }
 }

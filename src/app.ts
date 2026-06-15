@@ -4,6 +4,7 @@ import "dotenv/config";
 import express from "express";
 import helmet from "helmet";
 import routes from "./routes";
+import { globalErrorHandler } from "@/middlewares/error.middleware";
 
 const PORT = process.env.PORT || 3000;
 
@@ -16,6 +17,9 @@ app.use(compression());
 app.use(express.json());
 
 app.use("/api", routes);
+
+// Global Error Handler
+app.use(globalErrorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);

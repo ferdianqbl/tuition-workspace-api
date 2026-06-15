@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import type { IFindAllUsersRequest } from "./user.types";
+import { handleRepositoryError } from "@/utils/error";
 
 export class UserRepository {
   async findAll(params?: IFindAllUsersRequest) {
@@ -19,8 +20,8 @@ export class UserRepository {
           updatedAt: true,
         },
       });
-    } catch {
-      throw new Error("Failed to retrieve users");
+    } catch (error) {
+      handleRepositoryError(error, "Failed to retrieve users");
     }
   }
 
@@ -37,8 +38,8 @@ export class UserRepository {
           updatedAt: true,
         },
       });
-    } catch {
-      throw new Error(`Failed to find user by ID ${id}`);
+    } catch (error) {
+      handleRepositoryError(error, `Failed to find user by ID ${id}`);
     }
   }
 
@@ -47,8 +48,8 @@ export class UserRepository {
       return await prisma.users.findUnique({
         where: { username },
       });
-    } catch {
-      throw new Error(`Failed to find user by username ${username}`);
+    } catch (error) {
+      handleRepositoryError(error, `Failed to find user by username ${username}`);
     }
   }
 
@@ -70,8 +71,8 @@ export class UserRepository {
           updatedAt: true,
         },
       });
-    } catch {
-      throw new Error("Failed to create user");
+    } catch (error) {
+      handleRepositoryError(error, "Failed to create user");
     }
   }
 }

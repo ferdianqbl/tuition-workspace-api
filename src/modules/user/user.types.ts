@@ -1,5 +1,14 @@
+import type { Role as UserRoleEnum } from "@/generated/prisma/enums";
+
 export interface IFindAllUsersRequest {
   filters: {
-    role?: "PARENT" | "TUTOR" | "ADMIN";
+    role?: UserRoleEnum;
   };
+}
+
+export interface ICreateUserRequest {
+  username: string;
+  password: string;
+  name: string;
+  role: UserRoleEnum;
 }

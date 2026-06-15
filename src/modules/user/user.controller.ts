@@ -1,6 +1,7 @@
-import { errorResponse, successResponse } from "@/utils/response";
+import { successResponse } from "@/utils/response";
 import type { Request, Response } from "express";
 import { userService } from "./user.service";
+import { createAppError } from "@/utils/error";
 
 export class UserController {
   async getUsers(req: Request, res: Response) {
@@ -21,22 +22,10 @@ export class UserController {
     const { id } = req.params;
 
     if (typeof id !== "string" || !id) {
-      return errorResponse({
-        res,
-        message: "User ID is required",
-        code: 400,
-      });
+      throw createAppError("User ID is required", 400);
     }
 
     const user = await userService.getUserById(id);
-
-    if (!user) {
-      return errorResponse({
-        res,
-        message: "User not found",
-        code: 404,
-      });
-    }
 
     return successResponse({
       res,
@@ -50,28 +39,38 @@ export class UserController {
     const { username } = req.params;
 
     if (typeof username !== "string" || !username) {
-      return errorResponse({
-        res,
-        message: "Username is required",
-        code: 400,
-      });
+      throw createAppError("Username is required", 400);
     }
 
     const user = await userService.getUserByUsername(username);
-
-    if (!user) {
-      return errorResponse({
-        res,
-        message: "User not found",
-        code: 404,
-      });
-    }
 
     return successResponse({
       res,
       data: user,
       message: "User retrieved successfully",
       code: 200,
+    });
+  }
+
+  async createUser(req: Request, res: Response) {
+    const { username, password, name, role } = req.body;
+
+    if (!username || !password || !name || !role) {
+      throw createAppError("Username, password, name, and role are required", 400);
+    }
+
+    const user = await userService.createUser({
+      username,
+      password,
+      name,
+      role,
+    });
+
+    return successResponse({
+      res,
+      data: user,
+      message: "User created successfully",
+      code: 201,
     });
   }
 }

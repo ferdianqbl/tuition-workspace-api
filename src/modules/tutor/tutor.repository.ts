@@ -5,6 +5,7 @@ import type {
   ITutorQueryRequest,
   IUpsertTutorProfile,
 } from "./tutor.types";
+import { handleRepositoryError } from "@/utils/error";
 
 export class TutorRepository {
   async findProfileByUserId(userId: string) {
@@ -23,8 +24,8 @@ export class TutorRepository {
           },
         },
       });
-    } catch {
-      throw new Error(`Failed to retrieve tutor profile for user ${userId}`);
+    } catch (error) {
+      handleRepositoryError(error, `Failed to retrieve tutor profile for user ${userId}`);
     }
   }
 
@@ -44,8 +45,8 @@ export class TutorRepository {
           },
         },
       });
-    } catch {
-      throw new Error(`Failed to retrieve tutor profile ${id}`);
+    } catch (error) {
+      handleRepositoryError(error, `Failed to retrieve tutor profile ${id}`);
     }
   }
 
@@ -79,8 +80,8 @@ export class TutorRepository {
           },
         },
       });
-    } catch {
-      throw new Error("Failed to retrieve tutor profiles list");
+    } catch (error) {
+      handleRepositoryError(error, "Failed to retrieve tutor profiles list");
     }
   }
 
@@ -98,8 +99,8 @@ export class TutorRepository {
       }
 
       return await prisma.tutorProfiles.count({ where });
-    } catch {
-      throw new Error("Failed to count tutor profiles");
+    } catch (error) {
+      handleRepositoryError(error, "Failed to count tutor profiles");
     }
   }
 
@@ -119,8 +120,8 @@ export class TutorRepository {
           experiences: data.experiences,
         },
       });
-    } catch {
-      throw new Error(`Failed to create or update profile for user ${userId}`);
+    } catch (error) {
+      handleRepositoryError(error, `Failed to create or update profile for user ${userId}`);
     }
   }
 
@@ -137,8 +138,8 @@ export class TutorRepository {
           mimeType: data.mimeType,
         },
       });
-    } catch {
-      throw new Error("Failed to add document to tutor profile");
+    } catch (error) {
+      handleRepositoryError(error, "Failed to add document to tutor profile");
     }
   }
 
@@ -150,8 +151,8 @@ export class TutorRepository {
           tutor: true,
         },
       });
-    } catch {
-      throw new Error(`Failed to find tutor document ${id}`);
+    } catch (error) {
+      handleRepositoryError(error, `Failed to find tutor document ${id}`);
     }
   }
 
@@ -160,8 +161,8 @@ export class TutorRepository {
       return await prisma.tutorDocuments.delete({
         where: { id },
       });
-    } catch {
-      throw new Error(`Failed to delete tutor document ${id}`);
+    } catch (error) {
+      handleRepositoryError(error, `Failed to delete tutor document ${id}`);
     }
   }
 }
