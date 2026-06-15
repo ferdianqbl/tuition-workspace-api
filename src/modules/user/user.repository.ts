@@ -1,62 +1,79 @@
 import { prisma } from "../../lib/prisma";
 import type { IFindAllUsersRequest } from "./user.types";
+import { handleRepositoryError } from "@/utils/error";
 
 export class UserRepository {
   async findAll(params?: IFindAllUsersRequest) {
-    const { filters } = params || {};
+    try {
+      const { filters } = params || {};
 
-    return prisma.users.findMany({
-      where: {
-        ...(filters?.role && { role: filters.role }),
-      },
-      select: {
-        id: true,
-        username: true,
-        name: true,
-        role: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+      return await prisma.users.findMany({
+        where: {
+          ...(filters?.role && { role: filters.role }),
+        },
+        select: {
+          id: true,
+          username: true,
+          name: true,
+          role: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+    } catch (error) {
+      handleRepositoryError(error, "Failed to retrieve users");
+    }
   }
 
   async findById(id: string) {
-    return prisma.users.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        username: true,
-        name: true,
-        role: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+    try {
+      return await prisma.users.findUnique({
+        where: { id },
+        select: {
+          id: true,
+          username: true,
+          name: true,
+          role: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+    } catch (error) {
+      handleRepositoryError(error, `Failed to find user by ID ${id}`);
+    }
   }
 
   async findByUsername(username: string) {
-    return prisma.users.findUnique({
-      where: { username },
-    });
+    try {
+      return await prisma.users.findUnique({
+        where: { username },
+      });
+    } catch (error) {
+      handleRepositoryError(error, `Failed to find user by username ${username}`);
+    }
   }
 
   async create(data: {
     username: string;
-    password: string; // Already hashed
+    password: string;
     name: string;
     role: "PARENT" | "TUTOR" | "ADMIN";
   }) {
-    return prisma.users.create({
-      data,
-      select: {
-        id: true,
-        username: true,
-        name: true,
-        role: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+    try {
+      return await prisma.users.create({
+        data,
+        select: {
+          id: true,
+          username: true,
+          name: true,
+          role: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+    } catch (error) {
+      handleRepositoryError(error, "Failed to create user");
+    }
   }
 }
 

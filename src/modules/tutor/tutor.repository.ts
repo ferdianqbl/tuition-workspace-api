@@ -1,134 +1,167 @@
 import { prisma } from "../../lib/prisma";
 import type { ITutorFilters, ITutorQueryRequest, IUpsertTutorProfile } from "./tutor.types";
+import { handleRepositoryError } from "@/utils/error";
 
 export class TutorRepository {
   async findProfileByUserId(userId: string) {
-    return prisma.tutorProfiles.findUnique({
-      where: { userId },
-      include: {
-        documents: {
-          select: {
-            id: true,
-            filename: true,
-            size: true,
-            mimeType: true,
-            uploadedAt: true,
+    try {
+      return await prisma.tutorProfiles.findUnique({
+        where: { userId },
+        include: {
+          documents: {
+            select: {
+              id: true,
+              filename: true,
+              size: true,
+              mimeType: true,
+              uploadedAt: true,
+            },
           },
         },
-      },
-    });
+      });
+    } catch (error) {
+      handleRepositoryError(error, `Failed to retrieve tutor profile for user ${userId}`);
+    }
   }
 
   async findProfileById(id: string) {
-    return prisma.tutorProfiles.findUnique({
-      where: { id },
-      include: {
-        documents: {
-          select: {
-            id: true,
-            filename: true,
-            size: true,
-            mimeType: true,
-            uploadedAt: true,
+    try {
+      return await prisma.tutorProfiles.findUnique({
+        where: { id },
+        include: {
+          documents: {
+            select: {
+              id: true,
+              filename: true,
+              size: true,
+              mimeType: true,
+              uploadedAt: true,
+            },
           },
         },
-      },
-    });
+      });
+    } catch (error) {
+      handleRepositoryError(error, `Failed to retrieve tutor profile ${id}`);
+    }
   }
 
   async findAll(params: ITutorQueryRequest) {
-    const { search, skip, take } = params;
-    const where: any = {};
+    try {
+      const { search, skip, take } = params;
+      const where: any = {};
 
-    if (search) {
-      where.OR = [
-        { displayName: { contains: search, mode: "insensitive" } },
-        { qualifications: { hasSome: [search] } },
-        { experiences: { hasSome: [search] } },
-      ];
-    }
+      if (search) {
+        where.OR = [
+          { displayName: { contains: search, mode: "insensitive" } },
+          { qualifications: { hasSome: [search] } },
+          { experiences: { hasSome: [search] } },
+        ];
+      }
 
-    return prisma.tutorProfiles.findMany({
-      where,
-      skip,
-      take,
-      orderBy: { createdAt: "desc" },
-      include: {
-        documents: {
-          select: {
-            id: true,
-            filename: true,
-            size: true,
-            mimeType: true,
-            uploadedAt: true,
+      return await prisma.tutorProfiles.findMany({
+        where,
+        skip,
+        take,
+        orderBy: { createdAt: "desc" },
+        include: {
+          documents: {
+            select: {
+              id: true,
+              filename: true,
+              size: true,
+              mimeType: true,
+              uploadedAt: true,
+            },
           },
         },
-      },
-    });
+      });
+    } catch (error) {
+      handleRepositoryError(error, "Failed to retrieve tutor profiles list");
+    }
   }
 
   async count(params: ITutorFilters) {
-    const { search } = params;
-    const where: any = {};
+    try {
+      const { search } = params;
+      const where: any = {};
 
-    if (search) {
-      where.OR = [
-        { displayName: { contains: search, mode: "insensitive" } },
-        { qualifications: { hasSome: [search] } },
-        { experiences: { hasSome: [search] } },
-      ];
+      if (search) {
+        where.OR = [
+          { displayName: { contains: search, mode: "insensitive" } },
+          { qualifications: { hasSome: [search] } },
+          { experiences: { hasSome: [search] } },
+        ];
+      }
+
+      return await prisma.tutorProfiles.count({ where });
+    } catch (error) {
+      handleRepositoryError(error, "Failed to count tutor profiles");
     }
-
-    return prisma.tutorProfiles.count({ where });
   }
 
   async upsertProfile(
     userId: string,
     data: IUpsertTutorProfile
   ) {
-    return prisma.tutorProfiles.upsert({
-      where: { userId },
-      update: {
-        displayName: data.displayName,
-        qualifications: data.qualifications,
-        experiences: data.experiences,
-      },
-      create: {
-        userId,
-        displayName: data.displayName,
-        qualifications: data.qualifications,
-        experiences: data.experiences,
-      },
-    });
+    try {
+      return await prisma.tutorProfiles.upsert({
+        where: { userId },
+        update: {
+          displayName: data.displayName,
+          qualifications: data.qualifications,
+          experiences: data.experiences,
+        },
+        create: {
+          userId,
+          displayName: data.displayName,
+          qualifications: data.qualifications,
+          experiences: data.experiences,
+        },
+      });
+    } catch (error) {
+      handleRepositoryError(error, `Failed to create or update profile for user ${userId}`);
+    }
   }
 
   async createDocument(
     tutorProfileId: string,
     data: { filename: string; size: number; mimeType: string }
   ) {
-    return prisma.tutorDocuments.create({
-      data: {
-        tutorProfileId,
-        filename: data.filename,
-        size: data.size,
-        mimeType: data.mimeType,
-      },
-    });
+    try {
+      return await prisma.tutorDocuments.create({
+        data: {
+          tutorProfileId,
+          filename: data.filename,
+          size: data.size,
+          mimeType: data.mimeType,
+        },
+      });
+    } catch (error) {
+      handleRepositoryError(error, "Failed to add document to tutor profile");
+    }
   }
 
   async findDocumentById(id: string) {
-    return prisma.tutorDocuments.findUnique({
-      where: { id },
-      include: {
-        tutor: true,
-      },
-    });
+    try {
+      return await prisma.tutorDocuments.findUnique({
+        where: { id },
+        include: {
+          tutor: true,
+        },
+      });
+    } catch (error) {
+      handleRepositoryError(error, `Failed to find tutor document ${id}`);
+    }
   }
 
   async deleteDocumentById(id: string) {
-    return prisma.tutorDocuments.delete({
-      where: { id },
-    });
+    try {
+      return await prisma.tutorDocuments.delete({
+        where: { id },
+      });
+    } catch (error) {
+      handleRepositoryError(error, `Failed to delete tutor document ${id}`);
+    }
   }
 }
 

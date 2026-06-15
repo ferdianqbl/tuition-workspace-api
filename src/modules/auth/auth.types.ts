@@ -18,3 +18,9 @@ export interface IAuthUser {
   name: string;
   role: Role;
 }
+
+export interface IAuthCreateSessionRequest {
+  userId: string;
+  token: string;
+  expiresAt: Date;
+}

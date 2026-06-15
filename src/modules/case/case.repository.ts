@@ -1,73 +1,86 @@
 import { prisma } from "../../lib/prisma";
 import { CaseStatus } from "@/generated/prisma/client";
 import type { ICaseFilters, ICreateCaseRequest, IUpdateCaseRequest, ICaseQueryRequest } from "./case.types";
+import { handleRepositoryError } from "@/utils/error";
 
 export class CaseRepository {
   async createCase(
     userId: string,
     data: ICreateCaseRequest
   ) {
-    return prisma.cases.create({
-      data: {
-        userId,
-        title: data.title,
-        subject: data.subject,
-        level: data.level,
-        location: data.location,
-        budgetPerHour: data.budgetPerHour,
-        status: CaseStatus.OPEN,
-      },
-    });
+    try {
+      return await prisma.cases.create({
+        data: {
+          userId,
+          title: data.title,
+          subject: data.subject,
+          level: data.level,
+          location: data.location,
+          budgetPerHour: data.budgetPerHour,
+          status: CaseStatus.OPEN,
+        },
+      });
+    } catch (error) {
+      handleRepositoryError(error, "Failed to create tuition case");
+    }
   }
 
   async updateCase(
     id: string,
     data: IUpdateCaseRequest
   ) {
-    return prisma.cases.update({
-      where: { id },
-      data,
-    });
+    try {
+      return await prisma.cases.update({
+        where: { id },
+        data,
+      });
+    } catch (error) {
+      handleRepositoryError(error, `Failed to update case ${id}`);
+    }
   }
 
   async findCaseById(id: string) {
-    return prisma.cases.findUnique({
-      where: { id },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            role: true,
+    try {
+      return await prisma.cases.findUnique({
+        where: { id },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              role: true,
+            },
           },
-        },
-        caseDocuments: {
-          select: {
-            id: true,
-            filename: true,
-            size: true,
-            mimeType: true,
-            uploadedAt: true,
+          caseDocuments: {
+            select: {
+              id: true,
+              filename: true,
+              size: true,
+              mimeType: true,
+              uploadedAt: true,
+            },
           },
-        },
-        caseAccesses: {
-          where: { revokedAt: null },
-          select: {
-            id: true,
-            tutorId: true,
-            invitedAt: true,
-            tutor: {
-              select: {
-                id: true,
-                name: true,
-                username: true,
+          caseAccesses: {
+            where: { revokedAt: null },
+            select: {
+              id: true,
+              tutorId: true,
+              invitedAt: true,
+              tutor: {
+                select: {
+                  id: true,
+                  name: true,
+                  username: true,
+                },
               },
             },
           },
         },
-      },
-    });
+      });
+    } catch (error) {
+      handleRepositoryError(error, `Failed to retrieve case ${id}`);
+    }
   }
 
   private buildFilters(filters?: ICaseFilters) {
@@ -102,151 +115,187 @@ export class CaseRepository {
     parentId: string,
     params: ICaseQueryRequest
   ) {
-    const { skip, take, filters } = params;
-    const baseWhere = this.buildFilters(filters);
-    const where = {
-      ...baseWhere,
-      userId: parentId,
-    };
+    try {
+      const { skip, take, filters } = params;
+      const baseWhere = this.buildFilters(filters);
+      const where = {
+        ...baseWhere,
+        userId: parentId,
+      };
 
-    return prisma.cases.findMany({
-      where,
-      skip,
-      take,
-      orderBy: { createdAt: "desc" },
-      include: {
-        caseDocuments: {
-          select: {
-            id: true,
-            filename: true,
+      return await prisma.cases.findMany({
+        where,
+        skip,
+        take,
+        orderBy: { createdAt: "desc" },
+        include: {
+          caseDocuments: {
+            select: {
+              id: true,
+              filename: true,
+            },
           },
         },
-      },
-    });
+      });
+    } catch (error) {
+      handleRepositoryError(error, "Failed to retrieve parent cases list");
+    }
   }
 
   async countCasesForParent(parentId: string, filters?: ICaseFilters) {
-    const baseWhere = this.buildFilters(filters);
-    const where = {
-      ...baseWhere,
-      userId: parentId,
-    };
+    try {
+      const baseWhere = this.buildFilters(filters);
+      const where = {
+        ...baseWhere,
+        userId: parentId,
+      };
 
-    return prisma.cases.count({ where });
+      return await prisma.cases.count({ where });
+    } catch (error) {
+      handleRepositoryError(error, "Failed to count parent cases");
+    }
   }
 
   async findCasesForTutor(
     tutorId: string,
     params: ICaseQueryRequest
   ) {
-    const { skip, take, filters } = params;
-    const baseWhere = this.buildFilters(filters);
-    const where = {
-      ...baseWhere,
-      caseAccesses: {
-        some: {
-          tutorId,
-          revokedAt: null,
-        },
-      },
-    };
-
-    return prisma.cases.findMany({
-      where,
-      skip,
-      take,
-      orderBy: { createdAt: "desc" },
-      include: {
-        caseDocuments: {
-          select: {
-            id: true,
-            filename: true,
+    try {
+      const { skip, take, filters } = params;
+      const baseWhere = this.buildFilters(filters);
+      const where = {
+        ...baseWhere,
+        caseAccesses: {
+          some: {
+            tutorId,
+            revokedAt: null,
           },
         },
-      },
-    });
+      };
+
+      return await prisma.cases.findMany({
+        where,
+        skip,
+        take,
+        orderBy: { createdAt: "desc" },
+        include: {
+          caseDocuments: {
+            select: {
+              id: true,
+              filename: true,
+            },
+          },
+        },
+      });
+    } catch (error) {
+      handleRepositoryError(error, "Failed to retrieve tutor cases list");
+    }
   }
 
   async countCasesForTutor(tutorId: string, filters?: ICaseFilters) {
-    const baseWhere = this.buildFilters(filters);
-    const where = {
-      ...baseWhere,
-      caseAccesses: {
-        some: {
-          tutorId,
-          revokedAt: null,
+    try {
+      const baseWhere = this.buildFilters(filters);
+      const where = {
+        ...baseWhere,
+        caseAccesses: {
+          some: {
+            tutorId,
+            revokedAt: null,
+          },
         },
-      },
-    };
+      };
 
-    return prisma.cases.count({ where });
+      return await prisma.cases.count({ where });
+    } catch (error) {
+      handleRepositoryError(error, "Failed to count tutor cases");
+    }
   }
 
   async createAccess(caseId: string, parentId: string, tutorId: string) {
-    const existing = await prisma.caseAccesses.findFirst({
-      where: { caseId, tutorId },
-    });
-
-    if (existing) {
-      return prisma.caseAccesses.update({
-        where: { id: existing.id },
-        data: { revokedAt: null, parentId }, // update parentId just in case
+    try {
+      const existing = await prisma.caseAccesses.findFirst({
+        where: { caseId, tutorId },
       });
-    }
 
-    return prisma.caseAccesses.create({
-      data: {
-        caseId,
-        parentId,
-        tutorId,
-      },
-    });
+      if (existing) {
+        return await prisma.caseAccesses.update({
+          where: { id: existing.id },
+          data: { revokedAt: null, parentId },
+        });
+      }
+
+      return await prisma.caseAccesses.create({
+        data: {
+          caseId,
+          parentId,
+          tutorId,
+        },
+      });
+    } catch (error) {
+      handleRepositoryError(error, "Failed to grant tutor access to case");
+    }
   }
 
   async revokeAccess(caseId: string, tutorId: string) {
-    return prisma.caseAccesses.updateMany({
-      where: {
-        caseId,
-        tutorId,
-        revokedAt: null,
-      },
-      data: {
-        revokedAt: new Date(),
-      },
-    });
+    try {
+      return await prisma.caseAccesses.updateMany({
+        where: {
+          caseId,
+          tutorId,
+          revokedAt: null,
+        },
+        data: {
+          revokedAt: new Date(),
+        },
+      });
+    } catch (error) {
+      handleRepositoryError(error, "Failed to revoke tutor access to case");
+    }
   }
 
   async findAccess(caseId: string, tutorId: string) {
-    return prisma.caseAccesses.findFirst({
-      where: {
-        caseId,
-        tutorId,
-        revokedAt: null,
-      },
-    });
+    try {
+      return await prisma.caseAccesses.findFirst({
+        where: {
+          caseId,
+          tutorId,
+          revokedAt: null,
+        },
+      });
+    } catch (error) {
+      handleRepositoryError(error, "Failed to retrieve case access details");
+    }
   }
 
   async createDocument(
     caseId: string,
     data: { filename: string; size: number; mimeType: string }
   ) {
-    return prisma.caseDocuments.create({
-      data: {
-        caseId,
-        filename: data.filename,
-        size: data.size,
-        mimeType: data.mimeType,
-      },
-    });
+    try {
+      return await prisma.caseDocuments.create({
+        data: {
+          caseId,
+          filename: data.filename,
+          size: data.size,
+          mimeType: data.mimeType,
+        },
+      });
+    } catch (error) {
+      handleRepositoryError(error, "Failed to create case document");
+    }
   }
 
   async findDocumentById(id: string) {
-    return prisma.caseDocuments.findUnique({
-      where: { id },
-      include: {
-        case: true,
-      },
-    });
+    try {
+      return await prisma.caseDocuments.findUnique({
+        where: { id },
+        include: {
+          case: true,
+        },
+      });
+    } catch (error) {
+      handleRepositoryError(error, `Failed to retrieve case document ${id}`);
+    }
   }
 }
 
