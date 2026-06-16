@@ -1,7 +1,10 @@
+import { authenticate } from "@/middlewares/auth.middleware";
 import { Router } from "express";
 import { userController } from "./user.controller";
 
 const router = Router();
+
+router.use(authenticate);
 
 router.get("/", userController.getUsers);
 router.post("/", userController.createUser);
