@@ -1,16 +1,15 @@
+import type { Request, Response, NextFunction } from "express";
 import { errorResponse } from "@/utils/response";
-import type { NextFunction, Request, Response } from "express";
+
+interface RequestError extends Error {
+  statusCode?: number;
+}
 
 export function globalErrorHandler(
-  err: {
-    statusCode: number;
-    message: string;
-  },
+  err: RequestError,
   req: Request,
   res: Response,
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  next: NextFunction,
+  next: NextFunction
 ) {
   // 1. Log the full error internally for server debugging
   console.error(`[Error] ${req.method} ${req.url}:`, err);
@@ -18,7 +17,7 @@ export function globalErrorHandler(
   // 2. Extract status code and message
   const statusCode = err.statusCode || 500;
   const isProduction = process.env.NODE_ENV === "production";
-
+  
   // 3. Prevent leaking low-level internal database details in production
   let message = err.message || "Internal Server Error";
   if (isProduction && statusCode === 500) {
