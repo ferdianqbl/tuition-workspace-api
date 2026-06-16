@@ -1,7 +1,7 @@
+import { createAppError } from "@/utils/error";
 import { successResponse } from "@/utils/response";
 import type { Request, Response } from "express";
 import { userService } from "./user.service";
-import { createAppError } from "@/utils/error";
 
 export class UserController {
   async getUsers(req: Request, res: Response) {
@@ -56,7 +56,10 @@ export class UserController {
     const { username, password, name, role } = req.body;
 
     if (!username || !password || !name || !role) {
-      throw createAppError("Username, password, name, and role are required", 400);
+      throw createAppError(
+        "Username, password, name, and role are required",
+        400,
+      );
     }
 
     const user = await userService.createUser({
@@ -71,6 +74,45 @@ export class UserController {
       data: user,
       message: "User created successfully",
       code: 201,
+    });
+  }
+
+  async updateUser(req: Request, res: Response) {
+    const { id } = req.params;
+    const { password, role, username } = req.body;
+
+    if (!id || typeof id !== "string") {
+      throw createAppError("User ID is required", 400);
+    }
+
+    const user = await userService.update(id, {
+      username,
+      password,
+      role,
+    });
+
+    return successResponse({
+      res,
+      data: user,
+      message: "User updated successfully",
+      code: 200,
+    });
+  }
+
+  async deleteUser(req: Request, res: Response) {
+    const { id } = req.params;
+
+    if (!id || typeof id !== "string") {
+      throw createAppError("User ID is required", 400);
+    }
+
+    const user = await userService.delete(id);
+
+    return successResponse({
+      res,
+      data: user,
+      message: "User deleted successfully",
+      code: 200,
     });
   }
 }

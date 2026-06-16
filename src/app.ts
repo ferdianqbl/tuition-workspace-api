@@ -1,10 +1,10 @@
+import { globalErrorHandler } from "@/middlewares/error.middleware";
 import compression from "compression";
 import cors from "cors";
 import "dotenv/config";
 import express from "express";
 import helmet from "helmet";
 import routes from "./routes";
-import { globalErrorHandler } from "@/middlewares/error.middleware";
 
 const PORT = process.env.PORT || 3000;
 

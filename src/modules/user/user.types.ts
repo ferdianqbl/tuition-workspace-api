@@ -6,7 +6,7 @@ export interface IFindAllUsersRequest {
   };
 }
 
-export interface ICreateUserRequest {
+export interface ISaveUserRequest {
   username: string;
   password: string;
   name: string;

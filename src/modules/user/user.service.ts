@@ -1,8 +1,8 @@
 import { Role } from "@/generated/prisma/enums";
+import { createAppError } from "@/utils/error";
 import bcrypt from "bcryptjs";
 import { userRepository } from "./user.repository";
-import type { ICreateUserRequest, IFindAllUsersRequest } from "./user.types";
-import { createAppError } from "@/utils/error";
+import type { IFindAllUsersRequest, ISaveUserRequest } from "./user.types";
 
 export class UserService {
   async getUsers(params?: IFindAllUsersRequest) {
@@ -25,7 +25,7 @@ export class UserService {
     return user;
   }
 
-  async createUser(data: ICreateUserRequest) {
+  async createUser(data: ISaveUserRequest) {
     const { password, username, role } = data;
 
     if (role !== Role.ADMIN && role !== Role.PARENT && role !== Role.TUTOR) {
@@ -44,6 +44,39 @@ export class UserService {
       ...data,
       password: hashedPassword,
     });
+  }
+
+  async update(id: string, data: Partial<ISaveUserRequest>) {
+    const { password, role } = data;
+
+    if (
+      role !== undefined &&
+      role !== Role.ADMIN &&
+      role !== Role.PARENT &&
+      role !== Role.TUTOR
+    ) {
+      throw createAppError("Invalid user role", 400);
+    }
+
+    // const existUser = await userRepository.findByUsername(data.username!);
+
+    // if (existUser && existUser.id !== id) {
+    //   throw createAppError("Username has exist", 409);
+    // }
+
+    if (password) {
+      data.password = await bcrypt.hash(password, 10);
+    }
+
+    return userRepository.update(id, data);
+  }
+
+  async delete(id: string) {
+    const user = await userRepository.findById(id);
+    if (!user) {
+      throw createAppError("User not found", 404);
+    }
+    return userRepository.delete(id);
   }
 }
 

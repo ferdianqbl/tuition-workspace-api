@@ -2,10 +2,14 @@ import { Prisma } from "@/generated/prisma/client";
 
 export interface AppError extends Error {
   statusCode?: number;
-  originalError?: any;
+  originalError?: unknown;
 }
 
-export function createAppError(message: string, statusCode = 500, originalError?: any): AppError {
+export function createAppError(
+  message: string,
+  statusCode = 500,
+  originalError?: unknown,
+): AppError {
   const error = new Error(message) as AppError;
   error.name = "AppError";
   error.statusCode = statusCode;
@@ -15,7 +19,7 @@ export function createAppError(message: string, statusCode = 500, originalError?
 
 export function handleRepositoryError(
   error: unknown,
-  defaultMessage = "Database operation failed"
+  defaultMessage = "Database operation failed",
 ): never {
   console.error("Repository Error:", error);
 
@@ -25,12 +29,20 @@ export function handleRepositoryError(
         const targets = (error.meta?.target as string[]) || [];
         const fieldMsg =
           targets.length > 0 ? ` on field (${targets.join(", ")})` : "";
-        throw createAppError(`${defaultMessage}: Record already exists${fieldMsg}`, 409, error);
+        throw createAppError(
+          `${defaultMessage}: Record already exists${fieldMsg}`,
+          409,
+          error,
+        );
       }
       case "P2025":
         throw createAppError(`${defaultMessage}: Record not found`, 404, error);
       default:
-        throw createAppError(`${defaultMessage}: [${error.code}] ${error.message}`, 500, error);
+        throw createAppError(
+          `${defaultMessage}: [${error.code}] ${error.message}`,
+          500,
+          error,
+        );
     }
   }
 

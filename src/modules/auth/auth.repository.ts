@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import type { IAuthCreateSessionRequest } from "./auth.types";
 import { handleRepositoryError } from "@/utils/error";
+import type { IAuthCreateSessionRequest } from "./auth.types";
 
 export class AuthRepository {
   async createSession({ userId, token, expiresAt }: IAuthCreateSessionRequest) {
@@ -48,7 +48,7 @@ export class AuthRepository {
         where: { token },
       });
     } catch (error) {
-      const isRecordNotFound = (error as any)?.code === "P2025";
+      const isRecordNotFound = (error as { code?: string })?.code === "P2025";
       if (isRecordNotFound) return null;
       handleRepositoryError(error, "Failed to delete auth session by token");
     }
@@ -60,7 +60,7 @@ export class AuthRepository {
         where: { userId },
       });
     } catch (error) {
-      const isRecordNotFound = (error as any)?.code === "P2025";
+      const isRecordNotFound = (error as { code?: string })?.code === "P2025";
       if (isRecordNotFound) return null;
       handleRepositoryError(error, "Failed to delete auth session by user ID");
     }

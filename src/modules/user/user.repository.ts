@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import type { IFindAllUsersRequest } from "./user.types";
 import { handleRepositoryError } from "@/utils/error";
+import type { IFindAllUsersRequest, ISaveUserRequest } from "./user.types";
 
 export class UserRepository {
   async findAll(params?: IFindAllUsersRequest) {
@@ -49,16 +49,14 @@ export class UserRepository {
         where: { username },
       });
     } catch (error) {
-      handleRepositoryError(error, `Failed to find user by username ${username}`);
+      handleRepositoryError(
+        error,
+        `Failed to find user by username ${username}`,
+      );
     }
   }
 
-  async create(data: {
-    username: string;
-    password: string;
-    name: string;
-    role: "PARENT" | "TUTOR" | "ADMIN";
-  }) {
+  async create(data: ISaveUserRequest) {
     try {
       return await prisma.users.create({
         data,
@@ -73,6 +71,37 @@ export class UserRepository {
       });
     } catch (error) {
       handleRepositoryError(error, "Failed to create user");
+    }
+  }
+
+  async delete(id: string) {
+    try {
+      return await prisma.users.delete({
+        where: { id },
+      });
+    } catch (error) {
+      const isRecordNotFound = (error as { code?: string })?.code === "P2025";
+      if (isRecordNotFound) return null;
+      handleRepositoryError(error, "Failed to delete user by ID");
+    }
+  }
+
+  async update(id: string, data: Partial<ISaveUserRequest>) {
+    try {
+      return await prisma.users.update({
+        where: { id },
+        data,
+        select: {
+          id: true,
+          username: true,
+          name: true,
+          role: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+    } catch (error) {
+      handleRepositoryError(error, `Failed to update user`);
     }
   }
 }
