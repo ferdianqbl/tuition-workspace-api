@@ -58,12 +58,6 @@ export class UserService {
       throw createAppError("Invalid user role", 400);
     }
 
-    // const existUser = await userRepository.findByUsername(data.username!);
-
-    // if (existUser && existUser.id !== id) {
-    //   throw createAppError("Username has exist", 409);
-    // }
-
     if (password) {
       data.password = await bcrypt.hash(password, 10);
     }

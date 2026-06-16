@@ -47,12 +47,30 @@ export class UserRepository {
     try {
       return await prisma.users.findUnique({
         where: { username },
+        select: {
+          id: true,
+          username: true,
+          name: true,
+          role: true,
+          createdAt: true,
+          updatedAt: true,
+        },
       });
     } catch (error) {
       handleRepositoryError(
         error,
         `Failed to find user by username ${username}`,
       );
+    }
+  }
+
+  async findForAuth(username: string) {
+    try {
+      return await prisma.users.findUnique({
+        where: { username },
+      });
+    } catch (error) {
+      handleRepositoryError(error, `Auth lookup failed for username ${username}`);
     }
   }
 
