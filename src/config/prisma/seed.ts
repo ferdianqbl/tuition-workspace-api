@@ -12,12 +12,12 @@ async function main() {
   await prisma.authSessions.deleteMany();
   await prisma.users.deleteMany();
 
-  console.log("Seeding users...");
+  console.log("Generating seed data...");
   const saltRounds = 10;
   const passwordHash = await bcryptjs.hash("Password123", saltRounds);
 
   // 1. Create Admin
-  const admin = await prisma.users.create({
+  await prisma.users.create({
     data: {
       username: "admin",
       password: passwordHash,
@@ -26,132 +26,183 @@ async function main() {
     },
   });
 
-  // 2. Create Parents
-  const parent1 = await prisma.users.create({
-    data: {
-      username: "parent1",
-      password: passwordHash,
-      name: "Parent One",
-      role: Role.PARENT,
-    },
-  });
+  const locations = [
+    "Bukit Timah", "Clementi", "Orchard", "Jurong East", "Tampines",
+    "Bedok", "Woodlands", "Ang Mo Kio", "Serangoon", "Novena",
+    "Bishan", "Queenstown", "Sengkang", "Punggol", "Yishun",
+    "Pasir Ris", "Toa Payoh", "Geylang", "Tiong Bahru", "Marine Parade"
+  ];
 
-  const parent2 = await prisma.users.create({
-    data: {
-      username: "parent2",
-      password: passwordHash,
-      name: "Parent Two",
-      role: Role.PARENT,
-    },
-  });
+  const subjects = [
+    "Science", "Mathematics", "Additional Mathematics", "English", "Literature",
+    "Chemistry", "Physics", "Biology", "History", "Geography",
+    "Chinese", "Malay", "Tamil", "Economics"
+  ];
 
-  // 3. Create Tutors
-  const tutorUser1 = await prisma.users.create({
-    data: {
-      username: "tutor1",
-      password: passwordHash,
-      name: "Tutor One",
-      role: Role.TUTOR,
-    },
-  });
+  const levels = [
+    "Primary 1", "Primary 3", "Primary 5", "Primary 6",
+    "Secondary 1", "Secondary 2", "Secondary 3", "Secondary 4",
+    "JC 1", "JC 2"
+  ];
 
-  const tutorUser2 = await prisma.users.create({
-    data: {
-      username: "tutor2",
-      password: passwordHash,
-      name: "Tutor Two",
-      role: Role.TUTOR,
-    },
-  });
+  const qualificationsPool = [
+    ["Bachelor of Science in Mathematics (NUS)", "MOE Teaching Award Recipient"],
+    ["Master of Arts in English Literature (NTU)", "CELTA Certified Instructor"],
+    ["Bachelor of Engineering (SMU)", "Ex-MOE School Teacher"],
+    ["PhD in Chemistry (NUS)", "O-Level Exam Setter Assistant"],
+    ["Bachelor of Science in Physics (NUS)", "10+ years private tutoring experience"],
+    ["Diploma in Education (NIE)", "Full-Time Professional Tutor"],
+    ["Master of Science in Biology (NTU)", "Special Needs Certified Tutor"],
+    ["Bachelor of Business Administration (NUS)", "Former High School Lecturer"]
+  ];
 
-  // 4. Create Tutor Profiles
-  const tutorProfile1 = await prisma.tutorProfiles.create({
-    data: {
-      userId: tutorUser1.id,
-      displayName: "Tutor One (Mathematics Specialist)",
-      qualifications: [
-        "Bachelor of Science in Mathematics (NUS)",
-        "MOE Teaching Award Recipient",
-      ],
-      experiences: [
-        "5 years tutoring JC H2 Mathematics",
-        "Coached secondary school students in A-Math",
-      ],
-    },
-  });
+  const experiencesPool = [
+    ["5 years tutoring JC level", "Coached secondary school students in A-Math"],
+    ["Teacher at secondary school for 3 years", "Private IELTS preparation coaching"],
+    ["8 years full-time tuition centre tutor", "Prepared students for PSLE exams"],
+    ["Over 100 students tutored in Biology", "Guided students to A grade in O-Level Chemistry"],
+    ["12 years teaching experience", "Former Head of Department at top school"],
+    ["Private home tutoring for 6 years", "Created customized mock assessment papers"],
+    ["Taught primary math for 4 years", "Specialist in building foundation for struggling students"]
+  ];
 
-  const tutorProfile2 = await prisma.tutorProfiles.create({
-    data: {
-      userId: tutorUser2.id,
-      displayName: "Tutor Two (English & Literature Specialist)",
-      qualifications: [
-        "Master of Arts in English Literature (NTU)",
-        "CELTA Certified Instructor",
-      ],
-      experiences: [
-        "Teacher at secondary school for 3 years",
-        "Private IELTS preparation coaching",
-      ],
-    },
-  });
+  // 2. Create 20 Parents
+  console.log("Seeding 20 parent accounts...");
+  const parents = [];
+  for (let i = 1; i <= 20; i++) {
+    const parent = await prisma.users.create({
+      data: {
+        username: `parent${i}`,
+        password: passwordHash,
+        name: `Parent User ${i}`,
+        role: Role.PARENT,
+      },
+    });
+    parents.push(parent);
+  }
 
-  // 5. Create Tuition Cases
-  const case1 = await prisma.cases.create({
-    data: {
-      userId: parent1.id,
-      title: "Primary 5 Science Tuition (Urgent)",
-      subject: "Science",
-      level: "Primary 5",
-      location: "Bukit Timah",
-      budgetPerHour: 45.0,
-      status: CaseStatus.OPEN,
-    },
-  });
+  // 3. Create 20 Tutors & Tutor Profiles
+  console.log("Seeding 20 tutor accounts and profiles...");
+  const tutors = [];
+  for (let i = 1; i <= 20; i++) {
+    const tutor = await prisma.users.create({
+      data: {
+        username: `tutor${i}`,
+        password: passwordHash,
+        name: `Tutor User ${i}`,
+        role: Role.TUTOR,
+      },
+    });
+    tutors.push(tutor);
 
-  const case2 = await prisma.cases.create({
-    data: {
-      userId: parent1.id,
-      title: "Secondary 4 A-Math Tuition",
-      subject: "Additional Mathematics",
-      level: "Secondary 4",
-      location: "Clementi",
-      budgetPerHour: 60.0,
-      status: CaseStatus.OPEN,
-    },
-  });
+    const qIdx = i % qualificationsPool.length;
+    const eIdx = i % experiencesPool.length;
 
-  const case3 = await prisma.cases.create({
-    data: {
-      userId: parent2.id,
-      title: "JC 2 Chemistry Tuition",
-      subject: "Chemistry",
-      level: "JC 2",
-      location: "Orchard",
-      budgetPerHour: 85.0,
-      status: CaseStatus.OPEN,
-    },
-  });
+    await prisma.tutorProfiles.create({
+      data: {
+        userId: tutor.id,
+        displayName: `${tutor.name} (${subjects[i % subjects.length]} Specialist)`,
+        qualifications: qualificationsPool[qIdx],
+        experiences: experiencesPool[eIdx],
+      },
+    });
+  }
 
-  // 6. Create Case Accesses (Inviting Tutors)
-  // Invite tutor1 to case2 (A-Math)
+  // 4. Create 25 Tuition Cases
+  console.log("Seeding 25 tuition cases...");
+  const cases = [];
+  const caseTitles = [
+    "Primary 5 Science Tuition (Urgent)",
+    "Secondary 4 A-Math Tuition",
+    "JC 2 Chemistry Tuition",
+    "Primary 6 English Foundations",
+    "Secondary 3 Physics Preparation",
+    "JC 1 Economics Homework Help",
+    "Secondary 2 Geography and History",
+    "Primary 3 Mathematics Booster",
+    "Secondary 4 Biology Intensive",
+    "JC 2 English Literature Study",
+    "Primary 6 Chinese Oral and Writing",
+    "Secondary 1 General Science Intro",
+    "Secondary 4 Chemistry Prep Exam",
+    "JC 1 H2 Physics Crash Course",
+    "Primary 4 English Enrichment",
+    "Secondary 3 Additional Math",
+    "Secondary 2 Literature Appreciation",
+    "JC 2 H2 Mathematics",
+    "Primary 5 Mathematics Foundation",
+    "Secondary 4 Chinese Exam Focus",
+    "Primary 6 Science Revision",
+    "Secondary 1 English Reading",
+    "Secondary 3 Chemistry Lab Prep",
+    "JC 2 H2 Economics",
+    "Secondary 4 Physics Revision"
+  ];
+
+  for (let i = 1; i <= 25; i++) {
+    const parent = parents[i % parents.length];
+    const status = i % 8 === 0 ? CaseStatus.CLOSED : (i % 6 === 0 ? CaseStatus.MATCHED : CaseStatus.OPEN);
+    const caseData = await prisma.cases.create({
+      data: {
+        userId: parent.id,
+        title: caseTitles[i - 1] || `Tuition Case ${i} (Request)`,
+        subject: subjects[i % subjects.length],
+        level: levels[i % levels.length],
+        location: locations[i % locations.length],
+        budgetPerHour: Math.floor(35 + (i * 3.5)),
+        status: status,
+      },
+    });
+    cases.push(caseData);
+  }
+
+  // 5. Create Case Accesses (Invites)
+  console.log("Seeding initial case accesses / invitations...");
+  // Let's invite some tutors to cases
+  // tutor1 to case2
   await prisma.caseAccesses.create({
     data: {
-      caseId: case2.id,
-      parentId: parent1.id,
-      tutorId: tutorUser1.id,
+      caseId: cases[1].id,
+      parentId: cases[1].userId,
+      tutorId: tutors[0].id,
     },
   });
 
-  // Invite tutor2 to case3 (Chemistry)
+  // tutor2 to case3
   await prisma.caseAccesses.create({
     data: {
-      caseId: case3.id,
-      parentId: parent2.id,
-      tutorId: tutorUser2.id,
+      caseId: cases[2].id,
+      parentId: cases[2].userId,
+      tutorId: tutors[1].id,
     },
   });
 
-  console.log("Database seeded successfully!");
+  // Invite tutor3, tutor4 to case5
+  await prisma.caseAccesses.create({
+    data: {
+      caseId: cases[4].id,
+      parentId: cases[4].userId,
+      tutorId: tutors[2].id,
+    },
+  });
+  await prisma.caseAccesses.create({
+    data: {
+      caseId: cases[4].id,
+      parentId: cases[4].userId,
+      tutorId: tutors[3].id,
+    },
+  });
+
+  // Invite tutor5 to case6
+  await prisma.caseAccesses.create({
+    data: {
+      caseId: cases[5].id,
+      parentId: cases[5].userId,
+      tutorId: tutors[4].id,
+    },
+  });
+
+  console.log("Database seeded successfully with 20+ records of each type!");
 }
 
 main()
