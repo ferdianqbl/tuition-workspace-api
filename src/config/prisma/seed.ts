@@ -94,9 +94,9 @@ async function main() {
     await prisma.tutorProfiles.create({
       data: {
         userId: tutor.id,
-        displayName: `${tutor.name} (${subjects[i % subjects.length]} Specialist)`,
-        qualifications: qualificationsPool[i - 1],
-        experiences: experiencesPool[i - 1],
+        displayName: `${tutor.name} (${subjects[i % subjects.length]!} Specialist)`,
+        qualifications: qualificationsPool[i - 1]!,
+        experiences: experiencesPool[i - 1]!,
       },
     });
   }
@@ -133,15 +133,15 @@ async function main() {
   ];
 
   for (let i = 1; i <= 25; i++) {
-    const parent = parents[(i - 1) % parents.length];
+    const parent = parents[(i - 1) % parents.length]!;
     const status = i % 8 === 0 ? CaseStatus.CLOSED : (i % 6 === 0 ? CaseStatus.MATCHED : CaseStatus.OPEN);
     const caseData = await prisma.cases.create({
       data: {
         userId: parent.id,
-        title: caseTitles[i - 1] || `Tuition Case ${i} (Request)`,
-        subject: subjects[i % subjects.length],
-        level: levels[i % levels.length],
-        location: locations[i % locations.length],
+        title: caseTitles[i - 1] ?? `Tuition Case ${i} (Request)`,
+        subject: subjects[i % subjects.length]!,
+        level: levels[i % levels.length]!,
+        location: locations[i % locations.length]!,
         budgetPerHour: Math.floor(35 + (i * 3.5)),
         status: status,
       },
@@ -154,43 +154,43 @@ async function main() {
   // Let's invite tutor1 to case2
   await prisma.caseAccesses.create({
     data: {
-      caseId: cases[1].id,
-      parentId: cases[1].userId,
-      tutorId: tutors[0].id,
+      caseId: cases[1]!.id,
+      parentId: cases[1]!.userId,
+      tutorId: tutors[0]!.id,
     },
   });
 
   // Invite tutor2 to case3
   await prisma.caseAccesses.create({
     data: {
-      caseId: cases[2].id,
-      parentId: cases[2].userId,
-      tutorId: tutors[1].id,
+      caseId: cases[2]!.id,
+      parentId: cases[2]!.userId,
+      tutorId: tutors[1]!.id,
     },
   });
 
   // Invite tutor3, tutor4 to case5
   await prisma.caseAccesses.create({
     data: {
-      caseId: cases[4].id,
-      parentId: cases[4].userId,
-      tutorId: tutors[2].id,
+      caseId: cases[4]!.id,
+      parentId: cases[4]!.userId,
+      tutorId: tutors[2]!.id,
     },
   });
   await prisma.caseAccesses.create({
     data: {
-      caseId: cases[4].id,
-      parentId: cases[4].userId,
-      tutorId: tutors[3].id,
+      caseId: cases[4]!.id,
+      parentId: cases[4]!.userId,
+      tutorId: tutors[3]!.id,
     },
   });
 
   // Invite tutor5 to case6
   await prisma.caseAccesses.create({
     data: {
-      caseId: cases[5].id,
-      parentId: cases[5].userId,
-      tutorId: tutors[4].id,
+      caseId: cases[5]!.id,
+      parentId: cases[5]!.userId,
+      tutorId: tutors[4]!.id,
     },
   });
 
