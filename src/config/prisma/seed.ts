@@ -16,7 +16,8 @@ async function main() {
   const saltRounds = 10;
   const passwordHash = await bcryptjs.hash("Password123", saltRounds);
 
-  // 1. Create Admin
+  // 1. Create 1 Admin
+  console.log("Seeding 1 admin account...");
   await prisma.users.create({
     data: {
       username: "admin",
@@ -50,10 +51,7 @@ async function main() {
     ["Master of Arts in English Literature (NTU)", "CELTA Certified Instructor"],
     ["Bachelor of Engineering (SMU)", "Ex-MOE School Teacher"],
     ["PhD in Chemistry (NUS)", "O-Level Exam Setter Assistant"],
-    ["Bachelor of Science in Physics (NUS)", "10+ years private tutoring experience"],
-    ["Diploma in Education (NIE)", "Full-Time Professional Tutor"],
-    ["Master of Science in Biology (NTU)", "Special Needs Certified Tutor"],
-    ["Bachelor of Business Administration (NUS)", "Former High School Lecturer"]
+    ["Bachelor of Science in Physics (NUS)", "10+ years private tutoring experience"]
   ];
 
   const experiencesPool = [
@@ -61,15 +59,13 @@ async function main() {
     ["Teacher at secondary school for 3 years", "Private IELTS preparation coaching"],
     ["8 years full-time tuition centre tutor", "Prepared students for PSLE exams"],
     ["Over 100 students tutored in Biology", "Guided students to A grade in O-Level Chemistry"],
-    ["12 years teaching experience", "Former Head of Department at top school"],
-    ["Private home tutoring for 6 years", "Created customized mock assessment papers"],
-    ["Taught primary math for 4 years", "Specialist in building foundation for struggling students"]
+    ["12 years teaching experience", "Former Head of Department at top school"]
   ];
 
-  // 2. Create 20 Parents
-  console.log("Seeding 20 parent accounts...");
+  // 2. Create 3 Parents
+  console.log("Seeding 3 parent accounts...");
   const parents = [];
-  for (let i = 1; i <= 20; i++) {
+  for (let i = 1; i <= 3; i++) {
     const parent = await prisma.users.create({
       data: {
         username: `parent${i}`,
@@ -81,10 +77,10 @@ async function main() {
     parents.push(parent);
   }
 
-  // 3. Create 20 Tutors & Tutor Profiles
-  console.log("Seeding 20 tutor accounts and profiles...");
+  // 3. Create 5 Tutors & Tutor Profiles
+  console.log("Seeding 5 tutor accounts and profiles...");
   const tutors = [];
-  for (let i = 1; i <= 20; i++) {
+  for (let i = 1; i <= 5; i++) {
     const tutor = await prisma.users.create({
       data: {
         username: `tutor${i}`,
@@ -95,15 +91,12 @@ async function main() {
     });
     tutors.push(tutor);
 
-    const qIdx = i % qualificationsPool.length;
-    const eIdx = i % experiencesPool.length;
-
     await prisma.tutorProfiles.create({
       data: {
         userId: tutor.id,
         displayName: `${tutor.name} (${subjects[i % subjects.length]} Specialist)`,
-        qualifications: qualificationsPool[qIdx],
-        experiences: experiencesPool[eIdx],
+        qualifications: qualificationsPool[i - 1],
+        experiences: experiencesPool[i - 1],
       },
     });
   }
@@ -140,7 +133,7 @@ async function main() {
   ];
 
   for (let i = 1; i <= 25; i++) {
-    const parent = parents[i % parents.length];
+    const parent = parents[(i - 1) % parents.length];
     const status = i % 8 === 0 ? CaseStatus.CLOSED : (i % 6 === 0 ? CaseStatus.MATCHED : CaseStatus.OPEN);
     const caseData = await prisma.cases.create({
       data: {
@@ -158,8 +151,7 @@ async function main() {
 
   // 5. Create Case Accesses (Invites)
   console.log("Seeding initial case accesses / invitations...");
-  // Let's invite some tutors to cases
-  // tutor1 to case2
+  // Let's invite tutor1 to case2
   await prisma.caseAccesses.create({
     data: {
       caseId: cases[1].id,
@@ -168,7 +160,7 @@ async function main() {
     },
   });
 
-  // tutor2 to case3
+  // Invite tutor2 to case3
   await prisma.caseAccesses.create({
     data: {
       caseId: cases[2].id,
@@ -202,7 +194,7 @@ async function main() {
     },
   });
 
-  console.log("Database seeded successfully with 20+ records of each type!");
+  console.log("Database seeded successfully with 1 Admin, 3 Parents, 5 Tutors, and 25 Cases!");
 }
 
 main()
