@@ -17,7 +17,7 @@ On startup, the Express middleware stack is initialized in the following sequenc
  └─────┬─────┘
        ▼
  ┌───────────┐
- │   CORS    │  <-- Controls resource sharing origins
+ │   CORS    │  <-- Dynamically mirrors allowed request origins to support credentials
  └─────┬─────┘
        ▼
  ┌───────────┐
@@ -37,15 +37,30 @@ On startup, the Express middleware stack is initialized in the following sequenc
  └─────┬─────┘
        ▼
  ┌───────────┐
- │GlobalErrorHandler  <-- Intercepts uncaught exceptions and structures JSON error payloads
+ │GlobalErrorHandler  <-- Intercepts exceptions, structures error responses, terminates request
  └───────────┘
 ```
 
 ---
 
-## 2. Authentication & Authorization Middlewares
+## 2. CORS and Security Configurations
 
-### Token Verification (`authenticate.ts`)
+### Dynamic CORS Origin Matching
+- Read allowed origins list from the `CORS_ORIGIN` environment variable (comma-separated).
+- Uses a dynamic origin resolver callback. If `CORS_ORIGIN` is configured as `*` (wildcard) or includes the incoming request's `Origin` header:
+  - Echoes the exact request `Origin` header in the `Access-Control-Allow-Origin` response header.
+  - This allows cross-origin requests with `credentials: true` to pass browser-side CORS validations without wildcard rejections.
+
+### Global Error Handling
+- **Middleware**: `globalErrorHandler` catches all uncaught route errors.
+- **Payload**: Formats errors into a structured JSON payload using the `errorResponse` helper.
+- **Request Termination**: Terminates the request lifecycle by directly sending the response. It does NOT call `next(res)` or propagate the response object to subsequent error handlers to prevent `HeadersAlreadySent` crashes on serverless runtimes.
+
+---
+
+## 3. Authentication & Authorization Middlewares
+
+### Token Verification (`auth.middleware.ts`)
 - Extract token from request cookie or Authorization header.
 - Decrypt JWT using the HMAC-SHA256 signature token.
 - Fetch current active user parameters and attach them to `req.user`.
@@ -57,17 +72,18 @@ On startup, the Express middleware stack is initialized in the following sequenc
 
 ---
 
-## 3. Database Pooling (Prisma on Supabase)
+## 4. Database Client (Prisma on Supabase)
 
+- **Standard Client Generation**: The database client is compiled using the official `"prisma-client-js"` provider to the default `node_modules/@prisma/client` path. This prevents file-copying issues during builds and ensures native CommonJS import support across serverless environments.
 - **Transaction-mode Pooler** (`port 6543`): Used for everyday query transactions to minimize connection overhead.
 - **Session-mode Pooler** (`port 5432`): Used during migration tasks where absolute state session lock is required.
 
 ---
 
-## 4. File Upload & Storage Boundary
+## 5. File Upload & Storage Boundary
 
 - **Middleware**: Multer disk-storage.
-- **Size constraint**: 5MB maximum.
+- **Size constraint**: Managed by the `MAX_FILE_SIZE` environment variable (default 5MB fallback).
 - **MIME constraints**: `application/pdf`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document` (docx), `image/png`, `image/jpeg`.
 - **Filename Obfuscation**: On save, Multer overrides user filenames with `crypto.randomUUID() + originalExtension` (e.g. `8d19b7e1-c037-4536-80f9-a61ed63de6f0.pdf`). This isolates filenames on the host server disk and prevents directory path traversal attacks.
 - **Security Check**: Before sending the file stream in response, `downloadDocument` re-checks the database matching access lists for the user. If they do not have access, a `403 Forbidden` error is returned and the file download fails.

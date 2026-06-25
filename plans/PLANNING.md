@@ -6,20 +6,20 @@ This folder contains the planning specifications, database designs, and API refe
 
 ## 1. Document Index
 
-- **System Architecture**: Read about the Express middleware stack and database pooling in [SYSTEM_ARCHITECTURE.md](./SYSTEM_ARCHITECTURE.md).
+- **System Architecture**: Read about the Express middleware stack, dynamic CORS, and database pooling in [SYSTEM_ARCHITECTURE.md](./SYSTEM_ARCHITECTURE.md).
 - **API Reference**: Read endpoint parameters and payload schemas in [API.md](./API.md).
-- **Swagger Documentation**: Interactive OpenAPI explorer is available locally at `/api/docs`.
+- **Swagger Documentation**: Interactive OpenAPI explorer is available locally at `/api/docs` and live on Vercel at `https://tuition-workspace-api.vercel.app/api/docs`.
 
 ---
 
 ## 2. System Architecture Overview
 
 The backend is built as a TypeScript-based Node/Express service:
-- **Language**: TypeScript
-- **Runtime**: Node.js
+- **Language**: TypeScript (compiled to standard Node.js CommonJS via `"module": "NodeNext"` with `"type": "commonjs"` configuration)
+- **Runtime**: Node.js / Vercel Serverless Functions (`@vercel/node`)
 - **Routing Framework**: Express.js
 - **Database**: PostgreSQL (Supabase)
-- **ORM**: Prisma ORM
+- **ORM**: Prisma ORM (custom generation outputting directly to `@prisma/client` inside `node_modules`)
 
 For details on security headers, cookie sessions, file uploads, and error handling, refer to the full [SYSTEM_ARCHITECTURE.md](./SYSTEM_ARCHITECTURE.md) document.
 
