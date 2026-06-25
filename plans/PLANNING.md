@@ -104,7 +104,7 @@ erDiagram
 ## 🔗 Cross-Repository References
 
 - **Frontend Repository**: [tuition-workspace-fe](https://github.com/ferdianqbl/tuition-workspace-fe)
-- **Frontend Master Plan & Routing**: [fe/plans/PLANNING.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/PLANNING.md)
-- **Frontend System Architecture**: [fe/plans/SYSTEM_ARCHITECTURE.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/SYSTEM_ARCHITECTURE.md)
-- **Frontend UI/UX Design System**: [fe/plans/DESIGN.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/DESIGN.md)
+- **Frontend Master Plan & Routing**: [plans/PLANNING.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/PLANNING.md)
+- **Frontend System Architecture**: [plans/SYSTEM_ARCHITECTURE.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/SYSTEM_ARCHITECTURE.md)
+- **Frontend UI/UX Design System**: [plans/DESIGN.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/DESIGN.md)
 - **Live Frontend Web App**: [Live Deployment (Vercel)](https://tuition-workspace-fe.vercel.app/)

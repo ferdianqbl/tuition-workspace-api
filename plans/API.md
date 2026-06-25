@@ -149,7 +149,7 @@ This document defines the REST API endpoints, method paths, request payloads, re
 ## 🔗 Cross-Repository References
 
 - **Frontend Repository**: [tuition-workspace-fe](https://github.com/ferdianqbl/tuition-workspace-fe)
-- **Frontend services directory (API callers)**: [fe/src/services](https://github.com/ferdianqbl/tuition-workspace-fe/tree/main/src/services)
-- **Frontend Master Plan & Routing**: [fe/plans/PLANNING.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/PLANNING.md)
-- **Frontend System Architecture**: [fe/plans/SYSTEM_ARCHITECTURE.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/SYSTEM_ARCHITECTURE.md)
+- **Frontend services directory (API callers)**: [src/services](https://github.com/ferdianqbl/tuition-workspace-fe/tree/main/src/services)
+- **Frontend Master Plan & Routing**: [plans/PLANNING.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/PLANNING.md)
+- **Frontend System Architecture**: [plans/SYSTEM_ARCHITECTURE.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/SYSTEM_ARCHITECTURE.md)
 - **Live Frontend Web App**: [Live Deployment (Vercel)](https://tuition-workspace-fe.vercel.app/)
