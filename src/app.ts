@@ -22,8 +22,10 @@ app
   .use("/api", routes)
   .use(globalErrorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Server running on ${PORT}`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Server running on ${PORT}`);
+  });
+}
 
 export default app;
