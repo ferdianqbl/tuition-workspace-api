@@ -293,14 +293,17 @@ export class CaseRepository {
 
   async createDocument({
     caseId,
+    id,
     data,
   }: {
     caseId: string;
+    id: string;
     data: { filename: string; size: number; mimeType: string };
   }) {
     try {
       return await prisma.caseDocuments.create({
         data: {
+          id,
           caseId,
           filename: data.filename,
           size: data.size,

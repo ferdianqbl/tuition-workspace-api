@@ -83,8 +83,10 @@ export class TutorService {
       throw createAppError("Tutor profile must be created before uploading documents", 400);
     }
 
-    return tutorRepository.createDocument(profile.id, {
-      filename: file.filename,
+    const uuidId = path.basename(file.filename, path.extname(file.filename));
+
+    return tutorRepository.createDocument(profile.id, uuidId, {
+      filename: file.originalname,
       size: file.size,
       mimeType: file.mimetype,
     });
@@ -104,7 +106,7 @@ export class TutorService {
     await tutorRepository.deleteDocumentById(docId);
 
     // Clean up physical file on disk
-    const filePath = path.join(UPLOADS_DIR, document.filename);
+    const filePath = path.join(UPLOADS_DIR, `${document.id}${path.extname(document.filename)}`);
     await fs.unlink(filePath).catch((err) => {
       console.error("Failed to delete physical file:", err);
     });

@@ -114,8 +114,15 @@ export class CaseController {
       throw createAppError("Unauthenticated", 401);
     }
 
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
+    const pageVal = req.query.page !== undefined ? parseInt(req.query.page as string) : 1;
+    const limitVal = req.query.limit !== undefined ? parseInt(req.query.limit as string) : 10;
+
+    if (isNaN(pageVal) || pageVal < 1 || isNaN(limitVal) || limitVal < 1) {
+      throw createAppError("Pagination parameters 'page' and 'limit' must be positive integers greater than or equal to 1", 400);
+    }
+
+    const page = pageVal;
+    const limit = limitVal;
 
     const serviceParams: {
       page: number;

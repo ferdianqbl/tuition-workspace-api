@@ -236,10 +236,13 @@ export class CaseService {
       throw createAppError("Access denied: You are not authorized to upload documents to this case", 403);
     }
 
+    const uuidId = path.basename(file.filename, path.extname(file.filename));
+
     return caseRepository.createDocument({
       caseId,
+      id: uuidId,
       data: {
-        filename: file.filename,
+        filename: file.originalname,
         size: file.size,
         mimeType: file.mimetype,
       },
@@ -276,7 +279,7 @@ export class CaseService {
       throw createAppError("Access denied: You are not authorized to download this document", 403);
     }
 
-    const filePath = path.join(UPLOADS_DIR, document.filename);
+    const filePath = path.join(UPLOADS_DIR, `${document.id}${path.extname(document.filename)}`);
     
     // Check if the physical file exists on disk
     try {

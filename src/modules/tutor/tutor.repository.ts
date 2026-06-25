@@ -127,11 +127,13 @@ export class TutorRepository {
 
   async createDocument(
     tutorProfileId: string,
+    id: string,
     data: { filename: string; size: number; mimeType: string },
   ) {
     try {
       return await prisma.tutorDocuments.create({
         data: {
+          id,
           tutorProfileId,
           filename: data.filename,
           size: data.size,
