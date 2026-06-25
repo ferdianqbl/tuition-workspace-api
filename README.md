@@ -15,12 +15,14 @@ This is the backend REST API service for the Tuition Case Workspace platform, bu
 
 ### Backend Documentation (Local Relative Links)
 - **Product Requirement Document**: Read the platform's vision, roles, features, and validation results in [plans/PRD.md](./plans/PRD.md).
+- **Validation Results**: Read the backend validation checklist and database config results in [plans/VALIDATION.md](./plans/VALIDATION.md).
 - **Backend Master Plan**: Read about planning roadmaps and the database ERD in [plans/PLANNING.md](./plans/PLANNING.md).
 - **Backend API Specs**: Read about endpoint paths, payloads, and response interfaces in [plans/API.md](./plans/API.md).
 - **Backend System Architecture**: Read about Express middleware configurations and Supabase/Prisma pooling in [plans/SYSTEM_ARCHITECTURE.md](./plans/SYSTEM_ARCHITECTURE.md).
 
 ### Connected Frontend Documentation (GitHub Absolute Links)
 - **Frontend Product Requirement Document**: Read about system scope, roles, and frontend requirements in [plans/PRD.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/PRD.md).
+- **Frontend Validation Results**: Read the frontend validation checklist and compile results in [plans/VALIDATION.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/VALIDATION.md).
 - **Frontend Master Plan & Routing**: Read about Next.js page maps and paths in [plans/PLANNING.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/PLANNING.md).
 - **Frontend System Architecture**: Read about the Axios interceptors, caching layers, and folder maps in [plans/SYSTEM_ARCHITECTURE.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/SYSTEM_ARCHITECTURE.md).
 - **Frontend UI/UX Design System**: Read about colors, typography, roundings, and styled primitives in [plans/DESIGN.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/DESIGN.md).
