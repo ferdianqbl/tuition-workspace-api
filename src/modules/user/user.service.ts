@@ -1,5 +1,5 @@
-import { Role } from "@/generated/prisma/enums";
-import { createAppError } from "@/utils/error";
+import { Role } from "../../generated/prisma/enums";
+import { createAppError } from "../../utils/error";
 import bcrypt from "bcryptjs";
 import { userRepository } from "./user.repository";
 import type { IFindAllUsersRequest, ISaveUserRequest } from "./user.types";

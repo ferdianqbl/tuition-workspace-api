@@ -1,5 +1,5 @@
-import { prisma } from "@/lib/prisma";
-import { handleRepositoryError } from "@/utils/error";
+import { prisma } from "../../lib/prisma";
+import { handleRepositoryError } from "../../utils/error";
 import type { IFindAllUsersRequest, ISaveUserRequest } from "./user.types";
 
 export class UserRepository {

@@ -1,8 +1,8 @@
 import "multer";
-import { successResponse } from "@/utils/response";
+import { successResponse } from "../../utils/response";
 import type { Request, Response } from "express";
 import { tutorService } from "./tutor.service";
-import { createAppError } from "@/utils/error";
+import { createAppError } from "../../utils/error";
 
 export class TutorController {
   async getProfiles(req: Request, res: Response) {

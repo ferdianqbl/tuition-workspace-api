@@ -1,11 +1,11 @@
-import type { TutorProfilesWhereInput } from "@/generated/prisma/models";
-import { prisma } from "@/lib/prisma";
+import type { TutorProfilesWhereInput } from "../../generated/prisma/models";
+import { prisma } from "../../lib/prisma";
 import type {
   ITutorFilters,
   ITutorQueryRequest,
   IUpsertTutorProfile,
 } from "./tutor.types";
-import { handleRepositoryError } from "@/utils/error";
+import { handleRepositoryError } from "../../utils/error";
 
 export class TutorRepository {
   async findProfileByUserId(userId: string) {

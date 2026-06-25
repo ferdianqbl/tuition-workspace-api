@@ -2,9 +2,9 @@ import "multer";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { tutorRepository } from "./tutor.repository";
-import { createAppError } from "@/utils/error";
+import { createAppError } from "../../utils/error";
 import type { IUpsertTutorProfile } from "./tutor.types";
-import { Role } from "@/generated/prisma/client";
+import { Role } from "../../generated/prisma/client";
 
 export class TutorService {
   async getProfileByUserId(userId: string) {

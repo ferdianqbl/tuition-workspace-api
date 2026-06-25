@@ -1,8 +1,8 @@
 import bcrypt from "bcryptjs";
 import { userRepository } from "../user/user.repository";
 import { userService } from "../user/user.service";
-import { generateToken } from "@/utils/crypto";
-import { createAppError } from "@/utils/error";
+import { generateToken } from "../../utils/crypto";
+import { createAppError } from "../../utils/error";
 import type { ILoginRequest, IRegisterRequest } from "./auth.types";
 
 export class AuthService {

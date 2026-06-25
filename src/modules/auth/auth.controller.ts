@@ -1,7 +1,7 @@
-import { successResponse } from "@/utils/response";
+import { successResponse } from "../../utils/response";
 import type { Request, Response } from "express";
 import { authService } from "./auth.service";
-import { createAppError } from "@/utils/error";
+import { createAppError } from "../../utils/error";
 
 export class AuthController {
   async register(req: Request, res: Response) {

@@ -1,5 +1,5 @@
-import { createAppError } from "@/utils/error";
-import { successResponse } from "@/utils/response";
+import { createAppError } from "../../utils/error";
+import { successResponse } from "../../utils/response";
 import type { Request, Response } from "express";
 import { userService } from "./user.service";
 

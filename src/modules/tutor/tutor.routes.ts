@@ -1,6 +1,6 @@
-import { Role } from "@/generated/prisma/client";
-import { authenticate, requireRole } from "@/middlewares/auth.middleware";
-import { upload } from "@/middlewares/upload.middleware";
+import { Role } from "../../generated/prisma/client";
+import { authenticate, requireRole } from "../../middlewares/auth.middleware";
+import { upload } from "../../middlewares/upload.middleware";
 import { Router } from "express";
 import { tutorController } from "./tutor.controller";
 

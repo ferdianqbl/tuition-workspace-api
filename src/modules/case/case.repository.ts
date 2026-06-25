@@ -1,13 +1,13 @@
-import { CaseStatus } from "@/generated/prisma/client";
-import type { CasesWhereInput } from "@/generated/prisma/models";
-import { prisma } from "@/lib/prisma";
+import { CaseStatus } from "../../generated/prisma/client";
+import type { CasesWhereInput } from "../../generated/prisma/models";
+import { prisma } from "../../lib/prisma";
 import type {
   ICaseFilters,
   ICaseQueryRequest,
   ICreateCaseRequest,
   IUpdateCaseRequest,
 } from "./case.types";
-import { handleRepositoryError } from "@/utils/error";
+import { handleRepositoryError } from "../../utils/error";
 
 export class CaseRepository {
   async createCase({

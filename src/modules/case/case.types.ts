@@ -1,4 +1,4 @@
-import { CaseStatus } from "@/generated/prisma/client";
+import { CaseStatus } from "../../generated/prisma/client";
 
 export interface ICaseFilters {
   search?: string;

@@ -3,7 +3,7 @@ import multer from "multer";
 import path from "node:path";
 import crypto from "node:crypto";
 import fs from "node:fs";
-import { createAppError } from "@/utils/error";
+import { createAppError } from "../utils/error";
 
 const UPLOADS_DIR = path.join(process.cwd(), "uploads");
 

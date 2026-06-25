@@ -1,4 +1,4 @@
-import { errorResponse } from "@/utils/response";
+import { errorResponse } from "../utils/response";
 import type { NextFunction, Request, Response } from "express";
 
 interface RequestError extends Error {
