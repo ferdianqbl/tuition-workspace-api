@@ -5,13 +5,15 @@ enum CaseStatus {
 }
 
 model CaseDocuments {
-  id         String   @id @unique @default(uuid())
-  filename   String
-  size       Int
-  mimeType   String
-  uploadedAt DateTime @default(now())
-  caseId     String
-  case       Cases    @relation(fields: [caseId], references: [id])
+  id           String   @id @unique @default(uuid())
+  filename     String
+  size         Int
+  mimeType     String
+  uploadedAt   DateTime @default(now())
+  caseId       String
+  uploadedById String
+  case         Cases    @relation(fields: [caseId], references: [id])
+  uploadedBy   Users    @relation(fields: [uploadedById], references: [id])
 }
 
 model Cases {

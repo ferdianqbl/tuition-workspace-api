@@ -15,6 +15,7 @@ model Users {
   authSession    AuthSessions?
   tutorProfile   TutorProfiles?
   cases          Cases[]
+  caseDocuments  CaseDocuments[]
   parentAccesses CaseAccesses[] @relation("ParentAccesses")
   tutorAccesses  CaseAccesses[] @relation("TutorAccesses")
 }

@@ -241,6 +241,7 @@ export class CaseService {
     return caseRepository.createDocument({
       caseId,
       id: uuidId,
+      uploadedById: userId,
       data: {
         filename: file.originalname,
         size: file.size,

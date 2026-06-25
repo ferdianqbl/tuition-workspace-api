@@ -64,6 +64,14 @@ export class CaseRepository {
               size: true,
               mimeType: true,
               uploadedAt: true,
+              uploadedBy: {
+                select: {
+                  id: true,
+                  name: true,
+                  username: true,
+                  role: true,
+                },
+              },
             },
           },
           caseAccesses: {
@@ -294,10 +302,12 @@ export class CaseRepository {
   async createDocument({
     caseId,
     id,
+    uploadedById,
     data,
   }: {
     caseId: string;
     id: string;
+    uploadedById: string;
     data: { filename: string; size: number; mimeType: string };
   }) {
     try {
@@ -305,6 +315,7 @@ export class CaseRepository {
         data: {
           id,
           caseId,
+          uploadedById,
           filename: data.filename,
           size: data.size,
           mimeType: data.mimeType,
