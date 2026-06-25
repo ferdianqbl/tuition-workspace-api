@@ -4,11 +4,24 @@ This is the backend REST API service for the Tuition Case Workspace platform, bu
 
 ---
 
-## 1. Documentation Index
+## 🌐 Live Deployments & Repositories
 
-- Detailed backend roadmap, indices, and database ERD: [plans/PLANNING.md](./plans/PLANNING.md)
-- Complete route paths, payloads, and response references: [plans/API.md](./plans/API.md)
-- Express middleware logic and secure file constraints: [plans/SYSTEM_ARCHITECTURE.md](./plans/SYSTEM_ARCHITECTURE.md)
+- **Frontend Client Web App**: [Live Deployment (Vercel)](https://tuition-workspace-fe.vercel.app/) | [GitHub Repository](https://github.com/ferdianqbl/tuition-workspace-fe)
+- **Backend API Gateway**: [Live API Swagger Docs (Vercel)](https://tuition-workspace-api.vercel.app/api/docs) | [GitHub Repository](https://github.com/ferdianqbl/tuition-workspace-api)
+
+---
+
+## 📄 Documentation Index
+
+### Backend Documentation (Local Relative Links)
+- **Backend Master Plan**: Read about planning roadmaps and the database ERD in [plans/PLANNING.md](./plans/PLANNING.md).
+- **Backend API Specs**: Read about endpoint paths, payloads, and response interfaces in [plans/API.md](./plans/API.md).
+- **Backend System Architecture**: Read about Express middleware configurations and Supabase/Prisma pooling in [plans/SYSTEM_ARCHITECTURE.md](./plans/SYSTEM_ARCHITECTURE.md).
+
+### Connected Frontend Documentation (GitHub Absolute Links)
+- **Frontend Master Plan & Routing**: Read about Next.js page maps and paths in [fe/plans/PLANNING.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/PLANNING.md).
+- **Frontend System Architecture**: Read about the Axios interceptors, caching layers, and folder maps in [fe/plans/SYSTEM_ARCHITECTURE.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/SYSTEM_ARCHITECTURE.md).
+- **Frontend UI/UX Design System**: Read about colors, typography, roundings, and styled primitives in [fe/plans/DESIGN.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/DESIGN.md).
 
 ---
 

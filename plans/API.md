@@ -143,3 +143,13 @@ This document defines the REST API endpoints, method paths, request payloads, re
 * **Path**: `GET /api/cases/:id/documents/:docId/download`
 * **Role**: `PARENT` (owner) / `TUTOR` (invited only)
 * **Success (200)**: Returns file stream.
+
+---
+
+## 🔗 Cross-Repository References
+
+- **Frontend Repository**: [tuition-workspace-fe](https://github.com/ferdianqbl/tuition-workspace-fe)
+- **Frontend services directory (API callers)**: [fe/src/services](https://github.com/ferdianqbl/tuition-workspace-fe/tree/main/src/services)
+- **Frontend Master Plan & Routing**: [fe/plans/PLANNING.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/PLANNING.md)
+- **Frontend System Architecture**: [fe/plans/SYSTEM_ARCHITECTURE.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/SYSTEM_ARCHITECTURE.md)
+- **Live Frontend Web App**: [Live Deployment (Vercel)](https://tuition-workspace-fe.vercel.app/)

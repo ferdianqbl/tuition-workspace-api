@@ -112,3 +112,13 @@ be/
 │       ├── tutor/             # Tutor directory filters, qualifications, and certificate uploads
 │       └── case/              # Tuition case requirements, documents, and workspace invitations
 ```
+
+---
+
+## 🔗 Cross-Repository References
+
+- **Frontend Repository**: [tuition-workspace-fe](https://github.com/ferdianqbl/tuition-workspace-fe)
+- **Frontend System Architecture**: [fe/plans/SYSTEM_ARCHITECTURE.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/SYSTEM_ARCHITECTURE.md)
+- **Frontend Master Plan & Routing**: [fe/plans/PLANNING.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/PLANNING.md)
+- **Frontend UI/UX Design System**: [fe/plans/DESIGN.md](https://github.com/ferdianqbl/tuition-workspace-fe/blob/main/plans/DESIGN.md)
+- **Live Frontend Web App**: [Live Deployment (Vercel)](https://tuition-workspace-fe.vercel.app/)
