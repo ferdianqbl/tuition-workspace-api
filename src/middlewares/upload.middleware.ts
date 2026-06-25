@@ -2,15 +2,8 @@ import type { Request } from "express";
 import multer from "multer";
 import path from "node:path";
 import crypto from "node:crypto";
-import fs from "node:fs";
 import { createAppError } from "../utils/error";
-
-const UPLOADS_DIR = path.join(process.cwd(), "uploads");
-
-// Ensure uploads directory exists
-if (!fs.existsSync(UPLOADS_DIR)) {
-  fs.mkdirSync(UPLOADS_DIR, { recursive: true });
-}
+import { UPLOADS_DIR } from "../lib/uploads";
 
 const storage = multer.diskStorage({
   destination: (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => {

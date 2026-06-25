@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { tutorRepository } from "./tutor.repository";
 import { createAppError } from "../../utils/error";
+import { UPLOADS_DIR } from "../../lib/uploads";
 import type { IUpsertTutorProfile } from "./tutor.types";
 import { Role } from "@prisma/client";
 
@@ -103,7 +104,7 @@ export class TutorService {
     await tutorRepository.deleteDocumentById(docId);
 
     // Clean up physical file on disk
-    const filePath = path.join(process.cwd(), "uploads", document.filename);
+    const filePath = path.join(UPLOADS_DIR, document.filename);
     await fs.unlink(filePath).catch((err) => {
       console.error("Failed to delete physical file:", err);
     });

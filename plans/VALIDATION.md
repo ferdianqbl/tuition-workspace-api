@@ -27,6 +27,7 @@ Here is how the Express/Prisma/PostgreSQL backend implements each section of the
 
 ### C. Secure Document Workspace
 * **Multer File Constraints**: Enforces type limitations (PDF, DOCX, PNG, JPG, JPEG) and size limits of 5MB (configurable via `MAX_FILE_SIZE`).
+* **Vercel Serverless Write Directory (/tmp)**: In production/Vercel environments where the execution filesystem is read-only, all file uploads and downloads are dynamically routed to the writeable `/tmp` directory. In development, it defaults to a local `./uploads` directory.
 * **Random UUID Filename Obfuscation**: Real filenames are stored in the database, while physical files are renamed to cryptographically random UUID formats on disk (e.g. `c7a52f9c-1122-4433-8899-abcdef123456.pdf`), protecting the server folder structure.
 * **Temp File Cleanup**: If a file upload is rejected due to file type constraints or a non-existent case ID, the server automatically unlinks/deletes the local temp file immediately to prevent disk space exhaustion.
 * **Permission Recheck on Download**: Enforces cookie session verification and active case permission checking before streaming the file path from disk.

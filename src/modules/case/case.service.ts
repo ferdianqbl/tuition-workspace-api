@@ -5,6 +5,7 @@ import { Role, CaseStatus } from "@prisma/client";
 import { caseRepository } from "./case.repository";
 import { userRepository } from "../user/user.repository";
 import { createAppError } from "../../utils/error";
+import { UPLOADS_DIR } from "../../lib/uploads";
 import type {
   ICreateCaseRequest,
   IUpdateCaseRequest,
@@ -275,7 +276,7 @@ export class CaseService {
       throw createAppError("Access denied: You are not authorized to download this document", 403);
     }
 
-    const filePath = path.join(process.cwd(), "uploads", document.filename);
+    const filePath = path.join(UPLOADS_DIR, document.filename);
     
     // Check if the physical file exists on disk
     try {
