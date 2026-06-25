@@ -448,6 +448,15 @@ const swaggerDocument = {
   },
 };
 
-router.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+const swaggerOptions = {
+  customCssUrl: "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.8/swagger-ui.min.css",
+  customJs: [
+    "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.8/swagger-ui-bundle.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.8/swagger-ui-standalone-preset.js"
+  ],
+  customSiteTitle: "Tuition Marketplace API Docs"
+};
+
+router.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOptions));
 
 export default router;
