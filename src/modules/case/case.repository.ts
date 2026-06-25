@@ -1,5 +1,4 @@
-import { CaseStatus } from "../../generated/prisma/client";
-import type { CasesWhereInput } from "../../generated/prisma/models";
+import { CaseStatus, Prisma } from "@prisma/client";
 import { prisma } from "../../lib/prisma";
 import type {
   ICaseFilters,
@@ -90,7 +89,7 @@ export class CaseRepository {
   }
 
   private buildFilters(filters?: ICaseFilters) {
-    const where: CasesWhereInput = {};
+    const where: Prisma.CasesWhereInput = {};
 
     if (!filters) return where;
 

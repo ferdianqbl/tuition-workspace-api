@@ -1,6 +1,6 @@
 import "multer";
 import type { Request, Response } from "express";
-import { CaseStatus } from "../../generated/prisma/client";
+import { CaseStatus } from "@prisma/client";
 import { caseService } from "./case.service";
 import { successResponse } from "../../utils/response";
 import { createAppError } from "../../utils/error";

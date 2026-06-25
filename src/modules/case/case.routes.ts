@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { caseController } from "./case.controller";
 import { authenticate, requireRole } from "../../middlewares/auth.middleware";
-import { Role } from "../../generated/prisma/client";
+import { Role } from "@prisma/client";
 import { upload } from "../../middlewares/upload.middleware";
 
 const router = Router();

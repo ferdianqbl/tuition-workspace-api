@@ -1,4 +1,4 @@
-import type { Role as UserRoleEnum } from "../../generated/prisma/enums";
+import type { Role as UserRoleEnum } from "@prisma/client";
 
 export interface IFindAllUsersRequest {
   filters: {

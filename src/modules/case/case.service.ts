@@ -1,7 +1,7 @@
 import "multer";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { Role, CaseStatus } from "../../generated/prisma/client";
+import { Role, CaseStatus } from "@prisma/client";
 import { caseRepository } from "./case.repository";
 import { userRepository } from "../user/user.repository";
 import { createAppError } from "../../utils/error";

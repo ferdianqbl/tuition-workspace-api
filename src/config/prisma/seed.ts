@@ -1,6 +1,6 @@
 import bcryptjs from "bcryptjs";
 import { prisma } from "../../lib/prisma";
-import { Role, CaseStatus } from "../../generated/prisma/client";
+import { Role, CaseStatus } from "@prisma/client";
 
 async function main() {
   console.log("Cleaning database...");

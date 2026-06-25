@@ -1,4 +1,4 @@
-import { Role } from "../../generated/prisma/enums";
+import { Role } from "@prisma/client";
 import { createAppError } from "../../utils/error";
 import bcrypt from "bcryptjs";
 import { userRepository } from "./user.repository";

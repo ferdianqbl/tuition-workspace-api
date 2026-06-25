@@ -1,4 +1,4 @@
-import type { TutorProfilesWhereInput } from "../../generated/prisma/models";
+import { Prisma } from "@prisma/client";
 import { prisma } from "../../lib/prisma";
 import type {
   ITutorFilters,
@@ -53,7 +53,7 @@ export class TutorRepository {
   async findAll(params: ITutorQueryRequest) {
     try {
       const { search, skip, take } = params;
-      const where: TutorProfilesWhereInput = {};
+      const where: Prisma.TutorProfilesWhereInput = {};
 
       if (search) {
         where.OR = [
@@ -88,7 +88,7 @@ export class TutorRepository {
   async count(params: ITutorFilters) {
     try {
       const { search } = params;
-      const where: TutorProfilesWhereInput = {};
+      const where: Prisma.TutorProfilesWhereInput = {};
 
       if (search) {
         where.OR = [
