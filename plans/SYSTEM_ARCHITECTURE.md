@@ -87,3 +87,28 @@ On startup, the Express middleware stack is initialized in the following sequenc
 - **MIME constraints**: `application/pdf`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document` (docx), `image/png`, `image/jpeg`.
 - **Filename Obfuscation**: On save, Multer overrides user filenames with `crypto.randomUUID() + originalExtension` (e.g. `8d19b7e1-c037-4536-80f9-a61ed63de6f0.pdf`). This isolates filenames on the host server disk and prevents directory path traversal attacks.
 - **Security Check**: Before sending the file stream in response, `downloadDocument` re-checks the database matching access lists for the user. If they do not have access, a `403 Forbidden` error is returned and the file download fails.
+
+---
+
+## 6. Directory & Folder Structure
+
+The backend application organizes source files logically by utility type and business feature modules:
+
+```
+be/
+├── plans/                     # Architectural specs, API references, and designs
+├── src/
+│   ├── app.ts                 # Express application and middleware stack entrypoint
+│   ├── config/                # Global config systems (Swagger OpenAPI definition, Prisma settings)
+│   ├── generated/             # Auto-generated code from third-party tools (Prisma Client)
+│   ├── lib/                   # Client library integrations (Prisma Pg adapter instance wrapper)
+│   ├── middlewares/           # Global Express middlewares (authentication, error handling, Multer)
+│   ├── routes/                # Central Router index registering module sub-routes
+│   ├── types/                 # Global TypeScript type extensions (Express request typings)
+│   ├── utils/                 # Utility helpers (custom errors, crypto, standardized response schemas)
+│   └── modules/               # Feature-based business logic (modular sub-folders):
+│       ├── auth/              # Auth routes, controllers, services, repositories, schemas
+│       ├── user/              # User account lookups, data access, and creation layers
+│       ├── tutor/             # Tutor directory filters, qualifications, and certificate uploads
+│       └── case/              # Tuition case requirements, documents, and workspace invitations
+```
