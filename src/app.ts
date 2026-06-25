@@ -12,14 +12,20 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 const allowedOrigins = process.env.CORS_ORIGIN
-  ? process.env.CORS_ORIGIN.split(",")
-  : "*";
+  ? process.env.CORS_ORIGIN.split(",").map((o) => o.trim())
+  : ["*"];
 
 app
   .use(helmet())
   .use(
     cors({
-      origin: allowedOrigins,
+      origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes("*") || allowedOrigins.includes(origin)) {
+          return callback(null, true);
+        }
+        return callback(null, false);
+      },
       credentials: true,
     })
   )

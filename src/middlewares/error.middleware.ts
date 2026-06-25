@@ -24,11 +24,9 @@ export function globalErrorHandler(
     message = "An unexpected database or server error occurred";
   }
 
-  next(
-    errorResponse({
-      res,
-      message,
-      code: statusCode,
-    }),
-  );
+  return errorResponse({
+    res,
+    message,
+    code: statusCode,
+  });
 }
