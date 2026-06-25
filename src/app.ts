@@ -11,9 +11,18 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(",")
+  : "*";
+
 app
   .use(helmet())
-  .use(cors())
+  .use(
+    cors({
+      origin: allowedOrigins,
+      credentials: true,
+    })
+  )
   .use(cookieParser())
   .use(express.urlencoded({ extended: false }))
   .use(compression())
