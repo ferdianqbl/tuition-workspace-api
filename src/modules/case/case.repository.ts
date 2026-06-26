@@ -124,6 +124,42 @@ export class CaseRepository {
     return where;
   }
 
+  async findAllCases({ params }: { params: ICaseQueryRequest }) {
+    try {
+      const { skip, take, filters } = params;
+      const where = this.buildFilters(filters);
+
+      return await prisma.cases.findMany({
+        where,
+        skip,
+        take,
+        orderBy: { createdAt: "desc" },
+        include: {
+          caseDocuments: {
+            select: {
+              id: true,
+              filename: true,
+            },
+          },
+        },
+      });
+    } catch (error) {
+      handleRepositoryError(error, "Failed to retrieve all cases list");
+    }
+  }
+
+  async countAllCases(params: { filters?: ICaseFilters }) {
+    try {
+      const { filters } = params;
+      const where = this.buildFilters(filters);
+
+      return await prisma.cases.count({ where });
+    } catch (error) {
+      handleRepositoryError(error, "Failed to count all cases");
+    }
+  }
+
+
   async findCasesForParent({
     parentId,
     params,

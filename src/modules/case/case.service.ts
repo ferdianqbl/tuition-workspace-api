@@ -159,6 +159,28 @@ export class CaseService {
       };
     }
 
+    if (currentUser.role === Role.ADMIN) {
+      const countParams: { filters?: ICaseFilters } = {};
+      if (Object.keys(filters).length > 0) {
+        countParams.filters = filters;
+      }
+
+      const [data, total] = await Promise.all([
+        caseRepository.findAllCases({
+          params: queryParams,
+        }),
+        caseRepository.countAllCases(countParams),
+      ]);
+
+      return {
+        data,
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      };
+    }
+
     throw createAppError("Access denied: Invalid user role to view cases list", 403);
   }
 
