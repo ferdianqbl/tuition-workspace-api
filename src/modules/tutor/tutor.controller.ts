@@ -146,6 +146,27 @@ export class TutorController {
       code: 200,
     });
   }
+
+  async downloadDocument(req: Request, res: Response) {
+    if (!req.user) {
+      throw createAppError("Unauthenticated", 401);
+    }
+
+    const docId = typeof req.params.docId === "string" ? req.params.docId : undefined;
+    if (!docId) {
+      throw createAppError("Document ID is required", 400);
+    }
+
+    const { document, filePath } = await tutorService.downloadDocument(
+      req.user.id,
+      req.user.role,
+      docId
+    );
+
+    res.setHeader("Content-Type", document.mimeType);
+    res.setHeader("Content-Disposition", `attachment; filename="${document.filename}"`);
+    return res.sendFile(filePath);
+  }
 }
 
 export const tutorController = new TutorController();

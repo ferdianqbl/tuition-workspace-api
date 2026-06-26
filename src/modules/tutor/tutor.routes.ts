@@ -39,4 +39,10 @@ router.delete(
   tutorController.deleteDocument,
 );
 
+// Download document from profile
+router.get(
+  "/documents/:docId",
+  tutorController.downloadDocument,
+);
+
 export default router;

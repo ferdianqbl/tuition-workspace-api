@@ -56,11 +56,15 @@ export class TutorRepository {
       const where: Prisma.TutorProfilesWhereInput = {};
 
       if (search) {
-        where.OR = [
-          { displayName: { contains: search, mode: "insensitive" } },
-          { qualifications: { hasSome: [search] } },
-          { experiences: { hasSome: [search] } },
-        ];
+        const searchPattern = `%${search}%`;
+        const result = await prisma.$queryRaw<{ id: string }[]>`
+          SELECT id FROM "TutorProfiles"
+          WHERE "displayName" ILIKE ${searchPattern}
+             OR array_to_string(qualifications, ',') ILIKE ${searchPattern}
+             OR array_to_string(experiences, ',') ILIKE ${searchPattern}
+        `;
+        const matchedIds = result.map((r) => r.id);
+        where.id = { in: matchedIds };
       }
 
       return await prisma.tutorProfiles.findMany({
@@ -91,11 +95,15 @@ export class TutorRepository {
       const where: Prisma.TutorProfilesWhereInput = {};
 
       if (search) {
-        where.OR = [
-          { displayName: { contains: search, mode: "insensitive" } },
-          { qualifications: { hasSome: [search] } },
-          { experiences: { hasSome: [search] } },
-        ];
+        const searchPattern = `%${search}%`;
+        const result = await prisma.$queryRaw<{ id: string }[]>`
+          SELECT id FROM "TutorProfiles"
+          WHERE "displayName" ILIKE ${searchPattern}
+             OR array_to_string(qualifications, ',') ILIKE ${searchPattern}
+             OR array_to_string(experiences, ',') ILIKE ${searchPattern}
+        `;
+        const matchedIds = result.map((r) => r.id);
+        where.id = { in: matchedIds };
       }
 
       return await prisma.tutorProfiles.count({ where });

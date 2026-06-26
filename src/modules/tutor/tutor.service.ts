@@ -113,6 +113,43 @@ export class TutorService {
 
     return { success: true };
   }
+
+  async downloadDocument(
+    userId: string,
+    userRole: Role,
+    docId: string
+  ) {
+    const document = await tutorRepository.findDocumentById(docId);
+    if (!document) {
+      throw createAppError("Document not found", 404);
+    }
+
+    let isAuthorized = false;
+
+    if (userRole === Role.ADMIN || userRole === Role.PARENT) {
+      isAuthorized = true;
+    } else if (userRole === Role.TUTOR) {
+      isAuthorized = document.tutor.userId === userId;
+    }
+
+    if (!isAuthorized) {
+      throw createAppError("Access denied: You are not authorized to download this document", 403);
+    }
+
+    const filePath = path.join(UPLOADS_DIR, `${document.id}${path.extname(document.filename)}`);
+    
+    // Check if the physical file exists on disk
+    try {
+      await fs.access(filePath);
+    } catch {
+      throw createAppError("Document file is missing from disk storage", 404);
+    }
+
+    return {
+      document,
+      filePath,
+    };
+  }
 }
 
 export const tutorService = new TutorService();
