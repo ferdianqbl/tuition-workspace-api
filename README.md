@@ -49,6 +49,24 @@ JWT_SECRET="your-super-secure-jwt-signature-key-secret"
 
 ---
 
+## Seed Data & Credentials
+
+The database comes pre-seeded with a comprehensive set of mock accounts for testing. All accounts share the same password: **`Password123`**.
+
+| Username | Role | Purpose |
+|---|---|---|
+| `admin` | `ADMIN` | System administrator with full access to cases/profiles |
+| `parent1` | `PARENT` | Parent account with cases (P5 Science, Sec 4 Math) |
+| `parent2` | `PARENT` | Parent account with cases (JC 2 Chemistry) |
+| `parent3` | `PARENT` | Parent account with cases |
+| `tutor1` | `TUTOR` | Mathematics Specialist (NUS BSc) |
+| `tutor2` | `TUTOR` | English & Literature Specialist (NTU MA) |
+| `tutor3` | `TUTOR` | Computer Science Tutor (SMU) |
+| `tutor4` | `TUTOR` | Chemistry Tutor (NUS PhD) |
+| `tutor5` | `TUTOR` | Physics Tutor (NUS BSc) |
+
+---
+
 ## 3. Local Setup Instructions
 
 1. **Install Dependencies**:
