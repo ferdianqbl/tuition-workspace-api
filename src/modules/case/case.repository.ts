@@ -141,6 +141,14 @@ export class CaseRepository {
               filename: true,
             },
           },
+          user: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              role: true,
+            },
+          },
         },
       });
     } catch (error) {
@@ -185,6 +193,14 @@ export class CaseRepository {
             select: {
               id: true,
               filename: true,
+            },
+          },
+          user: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              role: true,
             },
           },
         },
@@ -242,6 +258,14 @@ export class CaseRepository {
             select: {
               id: true,
               filename: true,
+            },
+          },
+          user: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              role: true,
             },
           },
         },
