@@ -42,10 +42,10 @@ Here are the technical explanations and justifications for the backend architect
 ### 2. Authentication, Token Expiry, & Passwords (Section A)
 * **Choice**: Stateless **JWT (JSON Web Token)** session tokens generated via `jsonwebtoken` with HMAC-SHA256 signatures.
 * **Token Handlers**:
-  * Extracted from the `Authorization: Bearer <token>` header for general REST requests.
-  * Extracted from cookies using `cookie-parser` for direct file download streams, facilitating native browser file pipes.
+  * Transmitted and validated exclusively via secure, HTTP-only session cookies (`token`) for standard web application requests. This shields the platform from XSS token theft.
+  * Allows fallback validation via the `Authorization: Bearer <token>` header for external API clients or OpenAPI Swagger explorer testing.
 * **Session Expiry**:
-  * Tokens carry a defined expiration window. If a client sends an expired or invalid token, the auth middleware (`authenticate` in [auth.middleware.ts](file:///Users/ferdianqbl/_WORK/Exploration/FS/tech-test/sibyl/tuition-workspace/be/src/middlewares/auth.middleware.ts)) intercepts the request and throws a `401 Unauthorized` response immediately.
+  * Tokens carry a defined expiration window. If an expired or invalid token cookie/header is received, the auth middleware (`authenticate` in [auth.middleware.ts](file:///Users/ferdianqbl/_WORK/Exploration/FS/tech-test/sibyl/tuition-workspace/be/src/middlewares/auth.middleware.ts)) intercepts the request and throws a `401 Unauthorized` response immediately.
 * **Password Hashing**:
   * User passwords are hashed using `bcryptjs` with **10 salt rounds** in [user.service.ts](file:///Users/ferdianqbl/_WORK/Exploration/FS/tech-test/sibyl/tuition-workspace/be/src/modules/user/user.service.ts).
 * **Information Leak Prevention**:
